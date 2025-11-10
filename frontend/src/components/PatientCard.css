@@ -1,0 +1,90 @@
+.patient-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 20px 40px -24px rgba(15, 23, 42, 0.2);
+  border: 1px solid #e0e7ff;
+}
+
+.patient-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.patient-card__subtitle {
+  margin: 0;
+  color: #52648c;
+  font-size: 0.85rem;
+}
+
+.patient-card__risk {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  background: #e8f4fd;
+  color: #1565c0;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+.patient-card__confidence {
+  font-size: 0.85rem;
+  color: #455a7c;
+  margin-top: 0;
+}
+
+.patient-card__metrics ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.patient-card__metrics li {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px dashed #d0d7ef;
+  padding: 6px 0;
+  font-size: 0.85rem;
+}
+
+.patient-card__metric-value {
+  font-weight: 600;
+}
+
+.patient-card__details {
+  margin-top: 20px;
+}
+
+.patient-card__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.patient-card__grid-item {
+  background: #f4f6ff;
+  padding: 12px;
+  border-radius: 10px;
+}
+
+.patient-card__grid-label {
+  display: block;
+  font-size: 0.75rem;
+  color: #5b6d95;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.patient-card__grid-value {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.patient-card__disclaimer {
+  font-size: 0.75rem;
+  color: #9aa7c4;
+  margin-top: 24px;
+}

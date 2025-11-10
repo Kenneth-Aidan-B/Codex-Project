@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+.env.*
+artifacts/*.joblib
+artifacts/*.json
+artifacts/*.pkl
+data/*.csv
+data/*.json
+frontend/node_modules/
+frontend/build/
+.DS_Store
+*.log
