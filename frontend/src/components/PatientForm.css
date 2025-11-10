@@ -1,0 +1,77 @@
+.patient-form {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 20px 40px -24px rgba(15, 23, 42, 0.18);
+  border: 1px solid #dce4ff;
+}
+
+.patient-form__fieldset {
+  border: none;
+  margin: 0 0 20px;
+  padding: 0;
+}
+
+.patient-form__fieldset legend {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 12px;
+}
+
+.patient-form__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.patient-form__grid--compact {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.patient-form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+  color: #37456a;
+}
+
+.patient-form input[type='text'],
+.patient-form input[type='number'],
+.patient-form select {
+  margin-top: 6px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #c7d2fe;
+  font-size: 0.95rem;
+  background: #f8f9ff;
+}
+
+.patient-form__checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f8f9ff;
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.patient-form__submit {
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.patient-form__submit:disabled {
+  background: #90caf9;
+  cursor: not-allowed;
+}
+
+.patient-form__submit:not(:disabled):hover {
+  background: #1565c0;
+}

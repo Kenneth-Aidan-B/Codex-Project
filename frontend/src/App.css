@@ -1,0 +1,82 @@
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 20px 80px;
+}
+
+.app__header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.app__title {
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+}
+
+.app__subtitle {
+  color: #4e5d84;
+  margin: 0;
+}
+
+.app__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.app__section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.app__search-box {
+  display: flex;
+  gap: 12px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 12px 24px -18px rgba(15, 23, 42, 0.25);
+  border: 1px solid #e0e7ff;
+}
+
+.app__search-box input {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 999px;
+  border: 1px solid #c7d2fe;
+  font-size: 1rem;
+}
+
+.app__search-box button {
+  background: #0d47a1;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.app__search-box button:hover {
+  background: #0b3d91;
+}
+
+.app__status {
+  font-size: 0.9rem;
+  color: #394870;
+}
+
+.app__error {
+  color: #c62828;
+  font-weight: 600;
+}
+
+@media (max-width: 1024px) {
+  .app__grid {
+    grid-template-columns: 1fr;
+  }
+}
