@@ -69,7 +69,12 @@ def test_scaled_features():
     
     if len(numerical_cols) > 0:
         # After scaling, most features should have mean ~ 0 and std ~ 1
+        # But binary features will have std ~ 0.5, so we need to filter those out
         for col in numerical_cols[:5]:  # Check first 5
+            # Skip binary features (only 2 unique values after encoding)
+            if df[col].nunique() <= 2:
+                continue
+            
             mean = df[col].mean()
             std = df[col].std()
             # Allow some tolerance
