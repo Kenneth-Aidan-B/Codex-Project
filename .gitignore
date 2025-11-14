@@ -12,3 +12,11 @@ frontend/node_modules/
 frontend/build/
 .DS_Store
 *.log
+.pytest_cache/
+.coverage
+*.pt
+*.pth
+htmlcov/
+dist/
+build/
+*.egg-info/

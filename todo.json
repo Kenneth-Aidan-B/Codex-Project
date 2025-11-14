@@ -4,8 +4,8 @@
       "id": "1",
       "name": "Create data schema documentation",
       "file": "data/schema.md",
-      "status": "pending",
-      "timestamp": null,
+      "status": "done",
+      "timestamp": "2025-11-14T04:42:51.885032",
       "notes": "Document CSV schema for variants, clinical, and features"
     },
     {
@@ -13,24 +13,24 @@
       "name": "Generate synthetic data",
       "file": "data/synthetic/generate_synthetic.py",
       "verification": "data/synthetic/.generated_ok",
-      "status": "pending",
-      "timestamp": null,
+      "status": "done",
+      "timestamp": "2025-11-14T04:42:51.885354",
       "notes": "Create variants.csv, clinical.csv, and features.csv with seed 42"
     },
     {
       "id": "3",
       "name": "Create FastQC to VCF placeholder script",
       "file": "scripts/fastq_to_vcf.sh",
-      "status": "pending",
-      "timestamp": null,
+      "status": "done",
+      "timestamp": "2025-11-14T04:42:51.885612",
       "notes": "Informational script documenting the pipeline steps"
     },
     {
       "id": "4",
       "name": "Create variant annotation notebook",
       "file": "notebooks/annotate_variants.ipynb",
-      "status": "pending",
-      "timestamp": null,
+      "status": "done",
+      "timestamp": "2025-11-14T04:46:29.316066",
       "notes": "Demonstrate annotation on synthetic CSV"
     },
     {
@@ -38,8 +38,8 @@
       "name": "Implement preprocessing pipeline",
       "file": "ml/preprocess.py",
       "verification": "data/processed/.preprocess_ok",
-      "status": "pending",
-      "timestamp": null,
+      "status": "done",
+      "timestamp": "2025-11-14T04:42:51.886142",
       "notes": "Imputation, scaling, encoding, SMOTE"
     },
     {
@@ -47,8 +47,8 @@
       "name": "Implement feature selection",
       "file": "ml/feature_selection.py",
       "verification": "results/.feature_selection_ok",
-      "status": "pending",
-      "timestamp": null,
+      "status": "done",
+      "timestamp": "2025-11-14T04:42:51.886454",
       "notes": "ReliefF, PCA, mutual_info_classif"
     },
     {
@@ -73,120 +73,120 @@
       "id": "9",
       "name": "Create FastAPI application",
       "file": "api/app.py",
-      "status": "pending",
-      "timestamp": null,
+      "status": "done",
+      "timestamp": "2025-11-14T04:42:51.887216",
       "notes": "Endpoints: POST /predict, GET /explain/{sample_id}"
     },
     {
       "id": "10",
       "name": "Create API tests",
       "file": "api/test_api.py",
-      "status": "pending",
-      "timestamp": null,
+      "status": "done",
+      "timestamp": "2025-11-14T04:42:51.887412",
       "notes": "Test client for API endpoints"
     },
     {
       "id": "11",
       "name": "Create static frontend",
       "file": "frontend/index.html",
-      "status": "pending",
-      "timestamp": null,
+      "status": "done",
+      "timestamp": "2025-11-14T04:42:51.887620",
       "notes": "Simple HTML+JS for predictions and SHAP visualization"
     },
     {
       "id": "12",
       "name": "Create Dockerfile",
       "file": "docker/Dockerfile",
-      "status": "pending",
-      "timestamp": null,
+      "status": "done",
+      "timestamp": "2025-11-14T04:42:51.887837",
       "notes": "Container for API service"
     },
     {
       "id": "13",
       "name": "Create docker-compose configuration",
       "file": "docker/docker-compose.yml",
-      "status": "pending",
-      "timestamp": null,
+      "status": "done",
+      "timestamp": "2025-11-14T04:42:51.887939",
       "notes": "API + static file server"
     },
     {
       "id": "14",
       "name": "Create synthetic data tests",
       "file": "tests/test_synthetic_data.py",
-      "status": "pending",
-      "timestamp": null,
+      "status": "done",
+      "timestamp": "2025-11-14T04:42:51.888031",
       "notes": "Verify generator output"
     },
     {
       "id": "15",
       "name": "Create preprocessing tests",
       "file": "tests/test_preprocess.py",
-      "status": "pending",
-      "timestamp": null,
+      "status": "done",
+      "timestamp": "2025-11-14T04:42:51.888122",
       "notes": "Verify preprocessing outputs"
     },
     {
       "id": "16",
       "name": "Create training smoke tests",
       "file": "tests/test_train_smoke.py",
-      "status": "pending",
-      "timestamp": null,
+      "status": "done",
+      "timestamp": "2025-11-14T04:42:51.888210",
       "notes": "Fast training test on small subset"
     },
     {
       "id": "17",
       "name": "Create API tests",
       "file": "tests/test_api.py",
-      "status": "pending",
-      "timestamp": null,
+      "status": "done",
+      "timestamp": "2025-11-14T04:42:51.888302",
       "notes": "Test API endpoints with TestClient"
     },
     {
       "id": "18",
       "name": "Create CI/CD workflow",
       "file": ".github/workflows/ci.yml",
-      "status": "pending",
-      "timestamp": null,
+      "status": "done",
+      "timestamp": "2025-11-14T04:42:51.888401",
       "notes": "GitHub Actions for automated testing"
     },
     {
       "id": "19",
       "name": "Update requirements.txt",
       "file": "requirements.txt",
-      "status": "pending",
-      "timestamp": null,
+      "status": "done",
+      "timestamp": "2025-11-14T04:42:51.888491",
       "notes": "Pin all dependencies"
     },
     {
       "id": "20",
       "name": "Create model card",
       "file": "docs/model_card.md",
-      "status": "pending",
-      "timestamp": null,
+      "status": "done",
+      "timestamp": "2025-11-14T04:42:51.888577",
       "notes": "Document model details and limitations"
     },
     {
       "id": "21",
       "name": "Create data dictionary",
       "file": "docs/data_dictionary.md",
-      "status": "pending",
-      "timestamp": null,
+      "status": "done",
+      "timestamp": "2025-11-14T04:46:29.318573",
       "notes": "Document all features and labels"
     },
     {
       "id": "22",
       "name": "Create evaluation protocol",
       "file": "docs/evaluation_protocol.md",
-      "status": "pending",
-      "timestamp": null,
+      "status": "done",
+      "timestamp": "2025-11-14T04:46:29.318763",
       "notes": "Document evaluation methodology"
     },
     {
       "id": "23",
       "name": "Update main README",
       "file": "README.md",
-      "status": "pending",
-      "timestamp": null,
+      "status": "done",
+      "timestamp": "2025-11-14T04:42:51.889040",
       "notes": "Comprehensive documentation with run commands"
     }
   ]

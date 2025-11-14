@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hearing Deficiency Risk Predictor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 30px;
+        }
+
+        .tab {
+            padding: 15px 30px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 1em;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .tab:hover {
+            color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 1em;
+            font-weight: 600;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .result-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 20px;
+            border-left: 5px solid #667eea;
+        }
+
+        .result-header {
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .risk-meter {
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .risk-fill {
+            height: 100%;
+            transition: width 0.5s ease;
+            border-radius: 15px;
+        }
+
+        .risk-low { background: #4caf50; }
+        .risk-medium { background: #ff9800; }
+        .risk-high { background: #f44336; }
+
+        .feature-list {
+            margin-top: 20px;
+        }
+
+        .feature-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .feature-bar-container {
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            flex-grow: 1;
+            margin: 0 15px;
+            overflow: hidden;
+        }
+
+        .feature-bar {
+            height: 100%;
+            background: #667eea;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+            color: #856404;
+        }
+
+        .file-upload {
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-upload:hover {
+            background: #f8f9fa;
+            border-color: #764ba2;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔊 Hearing Deficiency Risk Predictor</h1>
+            <p>AI-Powered Risk Assessment Using Genomic & Clinical Data</p>
+        </div>
+
+        <div class="content">
+            <div class="warning">
+                <strong>⚠️ Disclaimer:</strong> This is a research prototype using synthetic data. 
+                NOT for clinical use. Consult healthcare professionals for medical advice.
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('single')">Single Prediction</button>
+                <button class="tab" onclick="showTab('batch')">Batch Prediction</button>
+                <button class="tab" onclick="showTab('about')">About</button>
+            </div>
+
+            <!-- Single Prediction Tab -->
+            <div id="single" class="tab-content active">
+                <h2>Enter Patient Information</h2>
+                <form id="predictionForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Age (months)</label>
+                            <input type="number" name="age_months" value="6" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Sex</label>
+                            <select name="sex" required>
+                                <option value="M">Male</option>
+                                <option value="F">Female</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Ethnicity</label>
+                            <select name="ethnicity" required>
+                                <option value="Caucasian">Caucasian</option>
+                                <option value="Hispanic">Hispanic</option>
+                                <option value="Asian">Asian</option>
+                                <option value="African">African</option>
+                                <option value="Mixed">Mixed</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Birth Weight (g)</label>
+                            <input type="number" name="birth_weight_g" value="3200" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Gestational Age (weeks)</label>
+                            <input type="number" step="0.1" name="gestational_age_weeks" value="38.5" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Premature Birth</label>
+                            <select name="premature" required>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>APGAR 1 min</label>
+                            <input type="number" name="apgar_1min" value="8" min="0" max="10" required>
+                        </div>
+                        <div class="form-group">
+                            <label>APGAR 5 min</label>
+                            <input type="number" name="apgar_5min" value="9" min="0" max="10" required>
+                        </div>
+                        <div class="form-group">
+                            <label>NICU Days</label>
+                            <input type="number" name="nicu_days" value="0" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Mechanical Ventilation (days)</label>
+                            <input type="number" name="mechanical_ventilation_days" value="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Hyperbilirubinemia</label>
+                            <select name="hyperbilirubinemia" required>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Max Bilirubin (mg/dL)</label>
+                            <input type="number" step="0.1" name="bilirubin_max_mg_dl" value="5.0" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Ototoxic Medications</label>
+                            <select name="ototoxic_medications" required>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Aminoglycoside Days</label>
+                            <input type="number" name="aminoglycoside_days" value="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Loop Diuretic Days</label>
+                            <input type="number" name="loop_diuretic_days" value="0" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Maternal CMV Infection</label>
+                            <select name="maternal_cmv_infection" required>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Maternal Rubella</label>
+                            <select name="maternal_rubella" required>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Maternal Toxoplasmosis</label>
+                            <select name="maternal_toxoplasmosis" required>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Family History of Hearing Loss</label>
+                            <select name="family_history_hearing_loss" required>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Consanguinity</label>
+                            <select name="consanguinity" required>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Syndromic Features</label>
+                            <select name="syndromic_features" required>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Craniofacial Anomalies</label>
+                            <select name="craniofacial_anomalies" required>
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>OAE Result</label>
+                            <select name="oae_result" required>
+                                <option value="pass">Pass</option>
+                                <option value="refer">Refer</option>
+                                <option value="not_done">Not Done</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>AABR Result</label>
+                            <select name="aabr_result" required>
+                                <option value="pass">Pass</option>
+                                <option value="refer">Refer</option>
+                                <option value="not_done">Not Done</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Predict Risk</button>
+                </form>
+
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Analyzing data...</p>
+                </div>
+
+                <div id="result"></div>
+            </div>
+
+            <!-- Batch Prediction Tab -->
+            <div id="batch" class="tab-content">
+                <h2>Batch Prediction from CSV</h2>
+                <div class="file-upload" onclick="document.getElementById('csvFile').click()">
+                    <p>📁 Click to upload CSV file</p>
+                    <p style="font-size: 0.9em; color: #666; margin-top: 10px;">
+                        CSV should contain all required patient fields
+                    </p>
+                </div>
+                <input type="file" id="csvFile" accept=".csv" style="display: none;" onchange="handleFileUpload(event)">
+                <div id="batchResult"></div>
+            </div>
+
+            <!-- About Tab -->
+            <div id="about" class="tab-content">
+                <h2>About This Tool</h2>
+                <p style="line-height: 1.8; color: #666;">
+                    This is an AI-powered research prototype for predicting hearing deficiency risk in newborns.
+                    It combines genomic and clinical data using multiple machine learning models including:
+                </p>
+                <ul style="margin: 20px 0; padding-left: 20px;">
+                    <li>Random Forest</li>
+                    <li>Support Vector Machine (SVM)</li>
+                    <li>XGBoost/Gradient Boosting</li>
+                    <li>Artificial Neural Network (ANN)</li>
+                    <li>Transformer-based classifier</li>
+                </ul>
+                <p style="line-height: 1.8; color: #666;">
+                    The models are explained using SHAP (SHapley Additive exPlanations) to provide interpretable
+                    insights into risk factors. This tool uses synthetic data and is intended for research and
+                    educational purposes only.
+                </p>
+                <h3 style="margin-top: 30px;">Key Features:</h3>
+                <ul style="margin: 20px 0; padding-left: 20px;">
+                    <li>Multi-model ensemble prediction</li>
+                    <li>SHAP-based explainability</li>
+                    <li>Clinical and genomic feature integration</li>
+                    <li>Batch processing support</li>
+                    <li>Risk stratification (Low/Medium/High)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        document.getElementById('predictionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = {};
+            formData.forEach((value, key) => {
+                // Convert numeric fields
+                if (['age_months', 'birth_weight_g', 'premature', 'apgar_1min', 'apgar_5min', 
+                     'nicu_days', 'mechanical_ventilation_days', 'hyperbilirubinemia', 
+                     'ototoxic_medications', 'aminoglycoside_days', 'loop_diuretic_days',
+                     'maternal_cmv_infection', 'maternal_rubella', 'maternal_toxoplasmosis',
+                     'family_history_hearing_loss', 'consanguinity', 'syndromic_features',
+                     'craniofacial_anomalies'].includes(key)) {
+                    data[key] = parseInt(value);
+                } else if (['gestational_age_weeks', 'bilirubin_max_mg_dl'].includes(key)) {
+                    data[key] = parseFloat(value);
+                } else {
+                    data[key] = value;
+                }
+            });
+
+            // Show loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('result').innerHTML = '';
+
+            try {
+                const response = await fetch(`${API_URL}/predict`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Prediction failed');
+                }
+
+                const result = await response.json();
+                displayResult(result);
+            } catch (error) {
+                document.getElementById('result').innerHTML = `
+                    <div class="result-card" style="border-left-color: #f44336;">
+                        <div class="result-header">Error</div>
+                        <p>Failed to get prediction. Make sure the API server is running.</p>
+                        <p style="color: #666; margin-top: 10px;">Error: ${error.message}</p>
+                    </div>
+                `;
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        });
+
+        function displayResult(result) {
+            const riskScore = result.risk_score * 100;
+            const riskClass = riskScore < 30 ? 'risk-low' : riskScore < 70 ? 'risk-medium' : 'risk-high';
+            const riskLabel = riskScore < 30 ? 'Low Risk' : riskScore < 70 ? 'Medium Risk' : 'High Risk';
+
+            let featuresHTML = '';
+            if (result.top_features && result.top_features.length > 0) {
+                featuresHTML = '<div class="feature-list"><h3>Top Contributing Features:</h3>';
+                result.top_features.forEach(feature => {
+                    const importance = (feature.importance * 100).toFixed(1);
+                    featuresHTML += `
+                        <div class="feature-item">
+                            <span><strong>${feature.feature}</strong></span>
+                            <div class="feature-bar-container">
+                                <div class="feature-bar" style="width: ${importance}%"></div>
+                            </div>
+                            <span>${importance}%</span>
+                        </div>
+                    `;
+                });
+                featuresHTML += '</div>';
+            }
+
+            document.getElementById('result').innerHTML = `
+                <div class="result-card">
+                    <div class="result-header">Prediction Results</div>
+                    <div style="margin: 20px 0;">
+                        <p><strong>Sample ID:</strong> ${result.sample_id}</p>
+                        <p><strong>Model Used:</strong> ${result.model_used}</p>
+                        <p><strong>Prediction:</strong> <span style="color: ${riskScore < 30 ? '#4caf50' : riskScore < 70 ? '#ff9800' : '#f44336'}; font-weight: bold;">${result.prediction}</span></p>
+                        <p><strong>Confidence:</strong> ${(result.confidence * 100).toFixed(1)}%</p>
+                    </div>
+                    <div>
+                        <p><strong>Risk Score: ${riskScore.toFixed(1)}%</strong></p>
+                        <div class="risk-meter">
+                            <div class="risk-fill ${riskClass}" style="width: ${riskScore}%"></div>
+                        </div>
+                        <p style="text-align: center; color: #666; font-size: 0.9em;">
+                            0% (Low Risk) ← → 100% (High Risk)
+                        </p>
+                    </div>
+                    ${featuresHTML}
+                </div>
+            `;
+        }
+
+        async function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            document.getElementById('batchResult').innerHTML = '<div class="loading" style="display: block;"><div class="spinner"></div><p>Processing batch...</p></div>';
+
+            try {
+                const response = await fetch(`${API_URL}/predict/batch`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Batch prediction failed');
+                }
+
+                const result = await response.json();
+                displayBatchResult(result);
+            } catch (error) {
+                document.getElementById('batchResult').innerHTML = `
+                    <div class="result-card" style="border-left-color: #f44336;">
+                        <div class="result-header">Error</div>
+                        <p>Failed to process batch. ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function displayBatchResult(result) {
+            let html = `
+                <div class="result-card">
+                    <div class="result-header">Batch Prediction Results</div>
+                    <p><strong>Total Samples:</strong> ${result.count}</p>
+                    <p><strong>Model Used:</strong> ${result.model_used}</p>
+                    <div style="max-height: 400px; overflow-y: auto; margin-top: 20px;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: #f0f0f0;">
+                                    <th style="padding: 10px; text-align: left;">Row</th>
+                                    <th style="padding: 10px; text-align: left;">Prediction</th>
+                                    <th style="padding: 10px; text-align: left;">Risk Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            `;
+
+            result.predictions.forEach(pred => {
+                const riskScore = (pred.risk_score * 100).toFixed(1);
+                const color = riskScore < 30 ? '#4caf50' : riskScore < 70 ? '#ff9800' : '#f44336';
+                html += `
+                    <tr style="border-bottom: 1px solid #e0e0e0;">
+                        <td style="padding: 10px;">${pred.row}</td>
+                        <td style="padding: 10px; color: ${color}; font-weight: bold;">${pred.prediction}</td>
+                        <td style="padding: 10px;">${riskScore}%</td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('batchResult').innerHTML = html;
+        }
+    </script>
+</body>
+</html>
