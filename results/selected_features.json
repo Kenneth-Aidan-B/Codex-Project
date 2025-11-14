@@ -1,0 +1,25 @@
+{
+  "selected_features": [
+    "mechanical_ventilation_days",
+    "age_months",
+    "apgar_5min",
+    "ethnicity",
+    "apgar_1min",
+    "premature",
+    "gestational_age_weeks",
+    "nicu_days",
+    "aabr_result",
+    "syndromic_features",
+    "oae_result",
+    "family_history_hearing_loss",
+    "maternal_cmv_infection",
+    "pathogenic_variant_count",
+    "bilirubin_max_mg_dl",
+    "maternal_rubella",
+    "homozygous_variant_count",
+    "hyperbilirubinemia",
+    "sex",
+    "max_cadd_score"
+  ],
+  "n_features": 20
+}
