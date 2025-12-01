@@ -24,10 +24,10 @@ craniofacial_anomalies,0.00835758544123566,0.06485079074268922
 has_slc26a4_variant,0.008009041342691203,0.062146258368089416
 birth_weight_g,0.004274682876726832,0.03316945625972355
 maternal_cmv_infection,0.003933341166603821,0.030520810909869217
-loop_diuretic_days,0.0,0.0
-bilirubin_max_mg_dl,0.0,0.0
-ototoxic_medications,0.0,0.0
-maternal_toxoplasmosis,0.0,0.0
-maternal_rubella,0.0,0.0
 consanguinity,0.0,0.0
+maternal_toxoplasmosis,0.0,0.0
 has_gjb2_variant,0.0,0.0
+loop_diuretic_days,0.0,0.0
+ototoxic_medications,0.0,0.0
+bilirubin_max_mg_dl,0.0,0.0
+maternal_rubella,0.0,0.0

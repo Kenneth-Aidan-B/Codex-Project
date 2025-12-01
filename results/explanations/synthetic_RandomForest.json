@@ -1,0 +1,80 @@
+{
+  "sample_id": "synthetic",
+  "model": "RandomForest",
+  "shap_values": {
+    "age_months": 0.0037355992767198806,
+    "sex": -0.019178170246826623,
+    "ethnicity": -0.0019310358281961065,
+    "birth_weight_g": -0.013082939849892809,
+    "gestational_age_weeks": -0.008260771107209321,
+    "premature": -0.012663529039256688,
+    "apgar_1min": 0.0016516609566073158,
+    "apgar_5min": 0.05838664279218608,
+    "nicu_days": 0.019904232783206483,
+    "mechanical_ventilation_days": 0.020835069558299,
+    "hyperbilirubinemia": -0.002043019374922145,
+    "bilirubin_max_mg_dl": -0.009310106520289735,
+    "ototoxic_medications": -0.0022947828244190395,
+    "aminoglycoside_days": -0.011277442156457845,
+    "loop_diuretic_days": -0.006695129755151672,
+    "maternal_cmv_infection": -0.003575943325422685,
+    "maternal_rubella": -0.00029609354101906444,
+    "maternal_toxoplasmosis": -4.60981218706734e-05,
+    "family_history_hearing_loss": -0.041237012844079386,
+    "consanguinity": 0.0001446339351511123,
+    "syndromic_features": -0.03283700433965812,
+    "craniofacial_anomalies": -0.006661311458489768,
+    "oae_result": -0.07100485659143056,
+    "aabr_result": -0.07128679743099903,
+    "pathogenic_variant_count": -0.0022962086583849955,
+    "has_gjb2_variant": -0.0026724150344433675,
+    "has_slc26a4_variant": 0.00038719137591049116,
+    "has_otof_variant": 0.00035854659009822355,
+    "max_cadd_score": 0.0021274402732461726,
+    "homozygous_variant_count": 0.0006943849676478164,
+    "compound_het_count": -0.0007288860064623979,
+    "high_impact_variant_count": 0.0006498635217891142
+  },
+  "top_features": [
+    [
+      "aabr_result",
+      -0.07128679743099903
+    ],
+    [
+      "oae_result",
+      -0.07100485659143056
+    ],
+    [
+      "apgar_5min",
+      0.05838664279218608
+    ],
+    [
+      "family_history_hearing_loss",
+      -0.041237012844079386
+    ],
+    [
+      "syndromic_features",
+      -0.03283700433965812
+    ],
+    [
+      "mechanical_ventilation_days",
+      0.020835069558299
+    ],
+    [
+      "nicu_days",
+      0.019904232783206483
+    ],
+    [
+      "sex",
+      -0.019178170246826623
+    ],
+    [
+      "birth_weight_g",
+      -0.013082939849892809
+    ],
+    [
+      "premature",
+      -0.012663529039256688
+    ]
+  ]
+}

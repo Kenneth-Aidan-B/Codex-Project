@@ -1,0 +1,80 @@
+{
+  "sample_id": "synthetic",
+  "model": "SVM",
+  "shap_values": {
+    "age_months": 0.004455810777515709,
+    "sex": -0.0023886637697750415,
+    "ethnicity": -0.024321556922133482,
+    "birth_weight_g": -0.016758392838534114,
+    "gestational_age_weeks": 0.0026221160394867635,
+    "premature": -0.01973196276757191,
+    "apgar_1min": 0.0016604259629689133,
+    "apgar_5min": 0.021316552791041662,
+    "nicu_days": -0.04601447427386539,
+    "mechanical_ventilation_days": -0.05991274561584492,
+    "hyperbilirubinemia": 0.006389826861679204,
+    "bilirubin_max_mg_dl": -0.007939856366672302,
+    "ototoxic_medications": -0.014191497875548471,
+    "aminoglycoside_days": -0.009283421425531388,
+    "loop_diuretic_days": -0.0020877386713283124,
+    "maternal_cmv_infection": 0.0,
+    "maternal_rubella": -0.017487832156684535,
+    "maternal_toxoplasmosis": 0.0,
+    "family_history_hearing_loss": -0.04431847834638146,
+    "consanguinity": 0.0036412433865520466,
+    "syndromic_features": -0.028199450161632018,
+    "craniofacial_anomalies": 0.0,
+    "oae_result": -0.012378630025081185,
+    "aabr_result": -0.04707011441301595,
+    "pathogenic_variant_count": -0.02525322551262627,
+    "has_gjb2_variant": 0.1355237811332009,
+    "has_slc26a4_variant": 0.011539727308775281,
+    "has_otof_variant": 0.006275727775239729,
+    "max_cadd_score": -0.008900139690028187,
+    "homozygous_variant_count": -0.0071608412827442285,
+    "compound_het_count": -0.001321161233022499,
+    "high_impact_variant_count": 0.08089793165297415
+  },
+  "top_features": [
+    [
+      "has_gjb2_variant",
+      0.1355237811332009
+    ],
+    [
+      "high_impact_variant_count",
+      0.08089793165297415
+    ],
+    [
+      "mechanical_ventilation_days",
+      -0.05991274561584492
+    ],
+    [
+      "aabr_result",
+      -0.04707011441301595
+    ],
+    [
+      "nicu_days",
+      -0.04601447427386539
+    ],
+    [
+      "family_history_hearing_loss",
+      -0.04431847834638146
+    ],
+    [
+      "syndromic_features",
+      -0.028199450161632018
+    ],
+    [
+      "pathogenic_variant_count",
+      -0.02525322551262627
+    ],
+    [
+      "ethnicity",
+      -0.024321556922133482
+    ],
+    [
+      "apgar_5min",
+      0.021316552791041662
+    ]
+  ]
+}

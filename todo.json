@@ -56,8 +56,8 @@
       "name": "Implement model training",
       "file": "ml/train.py",
       "verification": "results/.train_ok",
-      "status": "pending",
-      "timestamp": null,
+      "status": "done",
+      "timestamp": "2025-12-01T14:50:54.251119",
       "notes": "RandomForest, SVM, XGBoost, ANN, Transformer with 10-fold CV"
     },
     {
@@ -65,8 +65,8 @@
       "name": "Implement SHAP explanations",
       "file": "ml/explain.py",
       "verification": "results/.explain_ok",
-      "status": "pending",
-      "timestamp": null,
+      "status": "done",
+      "timestamp": "2025-12-01T14:50:54.251612",
       "notes": "Generate per-sample and global explanations"
     },
     {

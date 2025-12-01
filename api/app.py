@@ -13,6 +13,8 @@ import numpy as np
 import pandas as pd
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 # Set up logging
@@ -25,6 +27,7 @@ MODELS_DIR = BASE_DIR / "models"
 PROCESSED_DIR = BASE_DIR / "data" / "processed"
 RESULTS_DIR = BASE_DIR / "results"
 EXPLANATIONS_DIR = RESULTS_DIR / "explanations"
+FRONTEND_DIR = BASE_DIR / "frontend"
 
 # Initialize FastAPI
 app = FastAPI(
@@ -40,6 +43,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 # Global model cache
@@ -85,13 +89,19 @@ class PredictionInput(BaseModel):
     high_impact_variant_count: int = 0
 
 
+class FeatureImportance(BaseModel):
+    """Feature importance item"""
+    feature: str
+    importance: float
+
+
 class PredictionOutput(BaseModel):
     """Output schema for predictions"""
     sample_id: str
     risk_score: float
     prediction: str
     confidence: float
-    top_features: List[Dict[str, float]]
+    top_features: List[FeatureImportance]
     model_used: str
 
 
@@ -149,8 +159,11 @@ def preprocess_input(input_data: Dict) -> np.ndarray:
     
     # Apply preprocessing if available
     if PREPROCESSING_ARTIFACTS:
+        # Handle nested structure: artifacts may have 'encoders' containing sub-keys
+        encoders_data = PREPROCESSING_ARTIFACTS.get('encoders', PREPROCESSING_ARTIFACTS)
+        
         # Encode categorical features
-        label_encoders = PREPROCESSING_ARTIFACTS['label_encoders']
+        label_encoders = encoders_data.get('label_encoders', {})
         for col, le in label_encoders.items():
             if col in df.columns:
                 try:
@@ -158,17 +171,19 @@ def preprocess_input(input_data: Dict) -> np.ndarray:
                 except:
                     df[col] = 0  # Unknown category
         
-        # Impute numerical features
-        imputer = PREPROCESSING_ARTIFACTS['imputer']
-        numerical_cols = PREPROCESSING_ARTIFACTS['numerical_cols']
-        if numerical_cols and len(numerical_cols) > 0:
+        # Get numerical columns
+        numerical_cols = encoders_data.get('numerical_cols', [])
+        if numerical_cols:
             numerical_cols = [col for col in numerical_cols if col in df.columns]
-            if numerical_cols:
-                df[numerical_cols] = imputer.transform(df[numerical_cols])
         
-        # Scale numerical features
-        scaler = PREPROCESSING_ARTIFACTS['scaler']
-        if numerical_cols and len(numerical_cols) > 0:
+        # Impute numerical features (if imputer exists)
+        imputer = encoders_data.get('imputer')
+        if imputer and numerical_cols and len(numerical_cols) > 0:
+            df[numerical_cols] = imputer.transform(df[numerical_cols])
+        
+        # Scale numerical features (if scaler exists)
+        scaler = encoders_data.get('scaler')
+        if scaler and numerical_cols and len(numerical_cols) > 0:
             df[numerical_cols] = scaler.transform(df[numerical_cols])
     
     return df.values
@@ -338,6 +353,13 @@ async def predict_batch(file: UploadFile = File(...)):
     except Exception as e:
         logger.error(f"Batch prediction error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# Serve frontend - this must be AFTER all API routes
+@app.get("/app")
+async def serve_frontend():
+    """Serve the frontend HTML"""
+    return FileResponse(FRONTEND_DIR / "index.html")
 
 
 if __name__ == "__main__":

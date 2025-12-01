@@ -1,0 +1,80 @@
+{
+  "sample_id": "synthetic",
+  "model": "XGBoost",
+  "shap_values": {
+    "age_months": -0.03578868880867958,
+    "sex": -0.004670390393584967,
+    "ethnicity": -0.03219705447554588,
+    "birth_weight_g": -0.27306419610977173,
+    "gestational_age_weeks": -0.18704426288604736,
+    "premature": -0.12346666306257248,
+    "apgar_1min": 0.06597895920276642,
+    "apgar_5min": 0.7921310663223267,
+    "nicu_days": -0.019265197217464447,
+    "mechanical_ventilation_days": 0.09699961543083191,
+    "hyperbilirubinemia": -0.0028943289071321487,
+    "bilirubin_max_mg_dl": -0.39996811747550964,
+    "ototoxic_medications": -0.022920671850442886,
+    "aminoglycoside_days": -0.12076041847467422,
+    "loop_diuretic_days": -0.02998010441660881,
+    "maternal_cmv_infection": -0.0784984827041626,
+    "maternal_rubella": 0.0,
+    "maternal_toxoplasmosis": -0.0005213844124227762,
+    "family_history_hearing_loss": -0.42151257395744324,
+    "consanguinity": 0.007137134205549955,
+    "syndromic_features": -0.4489867687225342,
+    "craniofacial_anomalies": -0.09051643311977386,
+    "oae_result": -0.5638613700866699,
+    "aabr_result": -0.6660991311073303,
+    "pathogenic_variant_count": -0.01919984072446823,
+    "has_gjb2_variant": -0.055174004286527634,
+    "has_slc26a4_variant": 0.0239738579839468,
+    "has_otof_variant": 0.0016829994274303317,
+    "max_cadd_score": 0.06553144752979279,
+    "homozygous_variant_count": 3.8010766729712486e-06,
+    "compound_het_count": -0.001949837664142251,
+    "high_impact_variant_count": -0.027740592136979103
+  },
+  "top_features": [
+    [
+      "apgar_5min",
+      0.7921310663223267
+    ],
+    [
+      "aabr_result",
+      -0.6660991311073303
+    ],
+    [
+      "oae_result",
+      -0.5638613700866699
+    ],
+    [
+      "syndromic_features",
+      -0.4489867687225342
+    ],
+    [
+      "family_history_hearing_loss",
+      -0.42151257395744324
+    ],
+    [
+      "bilirubin_max_mg_dl",
+      -0.39996811747550964
+    ],
+    [
+      "birth_weight_g",
+      -0.27306419610977173
+    ],
+    [
+      "gestational_age_weeks",
+      -0.18704426288604736
+    ],
+    [
+      "premature",
+      -0.12346666306257248
+    ],
+    [
+      "aminoglycoside_days",
+      -0.12076041847467422
+    ]
+  ]
+}
