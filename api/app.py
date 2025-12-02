@@ -17,6 +17,9 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
+# Import routers
+from api.ai_insight import router as ai_insight_router
+
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -45,6 +48,9 @@ app.add_middleware(
     allow_headers=["*"],
     expose_headers=["*"],
 )
+
+# Include routers
+app.include_router(ai_insight_router, prefix="/ai", tags=["AI"])
 
 # Global model cache
 MODELS = {}

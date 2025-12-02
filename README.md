@@ -205,6 +205,64 @@ curl -X POST http://localhost:8000/predict/batch \
   -F "file=@samples.csv"
 ```
 
+### AI Insight (Gemini-powered LLM Summarization)
+
+**⚠️ Privacy Warning:** Do NOT send protected health information (PHI) or real patient data to cloud LLM services. This feature is designed for synthetic/de-identified data only. Enable privacy safeguards before using with any clinical data.
+
+Generate natural language summaries of model predictions and SHAP explanations using Gemini LLM:
+
+#### Setup
+Set environment variables for Gemini API access:
+```bash
+export GEMINI_API_KEY="your_api_key_here"
+export GEMINI_MODEL="gemini-pro"  # Optional, defaults to gemini-pro
+export GEMINI_ENDPOINT_TEMPLATE="https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"  # Optional
+```
+
+#### Usage with Direct Payload
+```bash
+curl -X POST http://localhost:8000/ai/insight \
+  -H "Content-Type: application/json" \
+  -d '{
+    "probability": 0.15,
+    "model_name": "RandomForest",
+    "shap": {
+      "aabr_result": -0.071,
+      "oae_result": -0.070,
+      "apgar_5min": 0.058,
+      "family_history_hearing_loss": -0.041,
+      "syndromic_features": -0.033
+    },
+    "features": {
+      "aabr_result": 0,
+      "oae_result": 0,
+      "apgar_5min": 9
+    }
+  }'
+```
+
+#### Usage with Sample ID
+```bash
+curl -X POST http://localhost:8000/ai/insight \
+  -H "Content-Type: application/json" \
+  -d '{
+    "sample_id": "synthetic",
+    "probability": 0.20,
+    "model_name": "RandomForest"
+  }'
+```
+
+**Fallback Behavior:** If `GEMINI_API_KEY` is not set or the API call fails, the endpoint returns a deterministic fallback summary based on SHAP values. Generated insights are cached in `results/ai_insights/` to reduce API calls.
+
+**Response Fields:**
+- `summary`: Natural language explanation of the prediction
+- `top_features`: Most important features with SHAP values
+- `confidence_note`: Confidence level assessment
+- `next_step`: Recommended action
+- `disclaimer`: Legal and privacy disclaimer
+- `llm_response_raw`: Raw LLM response (if available)
+- `cached`: Whether result was loaded from cache
+
 ## Model Performance
 
 | Model | Accuracy | Precision | Recall | F1 | AUC |
