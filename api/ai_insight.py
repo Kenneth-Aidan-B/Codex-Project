@@ -30,14 +30,6 @@ AI_INSIGHTS_DIR = BASE_DIR / "results" / "ai_insights"
 # Ensure AI insights directory exists
 AI_INSIGHTS_DIR.mkdir(parents=True, exist_ok=True)
 
-# Environment configuration
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-pro")
-GEMINI_ENDPOINT_TEMPLATE = os.getenv(
-    "GEMINI_ENDPOINT_TEMPLATE",
-    "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
-)
-
 # Initialize router
 router = APIRouter()
 
