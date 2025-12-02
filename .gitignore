@@ -20,3 +20,4 @@ htmlcov/
 dist/
 build/
 *.egg-info/
+results/ai_insights/*.json
