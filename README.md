@@ -22,9 +22,37 @@ This project implements a comprehensive ML automation system for hearing deficie
 
 ```
 .
+├── pipeline/                     # 🆕 Bioinformatics Pipeline
+│   ├── fastq_processor.py       # FASTQ QC and filtering
+│   ├── alignment.py             # BWA-MEM alignment
+│   ├── variant_caller.py        # Variant calling from BAM
+│   ├── annotator.py             # ClinVar, gnomAD, dbNSFP annotation
+│   ├── vcf_parser.py            # VCF parsing utilities
+│   └── config.py                # Pipeline configuration
+├── model/                        # 🆕 Enhanced AI/ML Models
+│   ├── gene_database.py         # 30+ hearing loss genes (GJB2, SLC26A4, OTOF...)
+│   ├── predictor.py             # Risk prediction (variant/gene/sample scoring)
+│   ├── explainer.py             # SHAP explainability
+│   ├── training.py              # Model training pipeline
+│   └── evaluation.py            # Performance metrics
 ├── api/                          # FastAPI application
 │   ├── app.py                   # Main API with /predict and /explain
 │   └── test_api.py              # API tests
+├── database/                     # 🆕 Database Layer (SQLAlchemy)
+│   ├── models.py                # ORM models (Sample, Analysis, Variant, Report)
+│   ├── connection.py            # DB connection management
+│   └── migrations/              # Database migrations
+├── reporting/                    # 🆕 Clinical Reporting
+│   ├── report_generator.py     # PDF/JSON report generation
+│   ├── ehr_integration.py      # HL7 FHIR integration
+│   └── templates/              # Report templates
+├── infrastructure/              # 🆕 Infrastructure Layer
+│   ├── config.py               # Cloud/deployment configuration
+│   └── security.py             # Encryption, authentication
+├── utils/                       # 🆕 Utilities
+│   ├── logging.py              # Structured logging
+│   ├── validators.py           # Input validation
+│   └── constants.py            # Application constants
 ├── data/                        
 │   ├── schema.md                # CSV schema documentation
 │   └── synthetic/               

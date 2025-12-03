@@ -1,0 +1,26 @@
+{
+  "environment": "development",
+  "database": {
+    "url": "sqlite:///./hearing_screening_dev.db",
+    "echo": true
+  },
+  "api": {
+    "host": "127.0.0.1",
+    "port": 8000,
+    "debug": true,
+    "reload": true
+  },
+  "pipeline": {
+    "output_dir": "./data/pipeline_output",
+    "temp_dir": "./tmp/pipeline",
+    "keep_intermediate_files": true
+  },
+  "models": {
+    "model_dir": "./models",
+    "use_gpu": false
+  },
+  "logging": {
+    "level": "DEBUG",
+    "format": "detailed"
+  }
+}
