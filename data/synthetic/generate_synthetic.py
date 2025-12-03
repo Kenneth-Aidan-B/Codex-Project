@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-Synthetic data generator for hearing deficiency ML project.
-Generates realistic genomic variants, clinical data, and merged features.
+Synthetic data generator for GENETIC hearing deficiency ML project.
+Generates purely genetics-based data for hearing loss prediction.
+Focus: Genomic variants and genetic risk factors ONLY.
 """
 import json
 import logging
 import sys
 from pathlib import Path
-from typing import List, Tuple
 
 import numpy as np
 import pandas as pd
@@ -26,83 +26,96 @@ DATA_DIR.mkdir(parents=True, exist_ok=True)
 # Seed for reproducibility
 np.random.seed(SEED)
 
-# Hearing loss genes
-HEARING_LOSS_GENES = [
-    'GJB2', 'SLC26A4', 'OTOF', 'MYO7A', 'MYO15A', 
-    'STRC', 'CDH23', 'PCDH15', 'TMC1', 'TMPRSS3',
-    'KCNQ4', 'TECTA', 'COL11A2', 'MYO6', 'ESPN'
-]
+# Hearing loss genes with their relative pathogenicity weights
+HEARING_LOSS_GENES = {
+    'GJB2': {'weight': 0.35, 'inheritance': 'recessive', 'chr': 'chr13'},
+    'SLC26A4': {'weight': 0.25, 'inheritance': 'recessive', 'chr': 'chr7'},
+    'OTOF': {'weight': 0.15, 'inheritance': 'recessive', 'chr': 'chr2'},
+    'MYO7A': {'weight': 0.20, 'inheritance': 'recessive', 'chr': 'chr11'},
+    'MYO15A': {'weight': 0.18, 'inheritance': 'recessive', 'chr': 'chr17'},
+    'STRC': {'weight': 0.12, 'inheritance': 'recessive', 'chr': 'chr15'},
+    'CDH23': {'weight': 0.22, 'inheritance': 'recessive', 'chr': 'chr10'},
+    'PCDH15': {'weight': 0.20, 'inheritance': 'recessive', 'chr': 'chr10'},
+    'TMC1': {'weight': 0.15, 'inheritance': 'recessive', 'chr': 'chr9'},
+    'TMPRSS3': {'weight': 0.12, 'inheritance': 'recessive', 'chr': 'chr21'},
+    'KCNQ4': {'weight': 0.10, 'inheritance': 'dominant', 'chr': 'chr1'},
+    'TECTA': {'weight': 0.14, 'inheritance': 'both', 'chr': 'chr11'},
+    'WFS1': {'weight': 0.12, 'inheritance': 'dominant', 'chr': 'chr4'},
+    'TRIOBP': {'weight': 0.10, 'inheritance': 'recessive', 'chr': 'chr22'},
+}
 
-CHROMOSOMES = ['chr1', 'chr7', 'chr9', 'chr10', 'chr11', 'chr12', 'chr13', 'chr17', 'chrX']
 VARIANT_TYPES = ['SNV', 'INDEL', 'CNV']
 ZYGOSITY = ['homozygous', 'heterozygous', 'compound_heterozygous']
 PATHOGENICITY = ['pathogenic', 'likely_pathogenic', 'benign', 'likely_benign', 'VUS']
 IMPACTS = ['HIGH', 'MODERATE', 'LOW', 'MODIFIER']
-CONSEQUENCES = ['missense_variant', 'frameshift', 'splice_site', 'nonsense', 'synonymous', 'intron_variant']
-ETHNICITIES = ['Caucasian', 'Hispanic', 'Asian', 'African', 'Mixed']
-OAE_RESULTS = ['pass', 'refer', 'not_done']
-AABR_RESULTS = ['pass', 'refer', 'not_done']
-SEVERITY_CLASSES = ['normal', 'mild', 'moderate', 'severe', 'profound']
+CONSEQUENCES = ['missense_variant', 'frameshift_variant', 'splice_site', 'stop_gained', 'synonymous_variant', 'intron_variant']
+ETHNICITIES = ['Caucasian', 'Hispanic', 'Asian', 'African', 'Middle_Eastern', 'Mixed']
 
 
 def generate_variants_data(num_samples: int) -> pd.DataFrame:
     """Generate synthetic genomic variants data"""
-    logger.info(f"Generating variants data for {num_samples} samples...")
+    logger.info(f"Generating genetic variants for {num_samples} samples...")
     
     records = []
+    gene_list = list(HEARING_LOSS_GENES.keys())
+    
     for i in range(num_samples):
         sample_id = f"SAMPLE_{i:04d}"
-        
-        # Each sample has 0-5 variants
-        num_variants = np.random.choice([0, 1, 2, 3, 4, 5], p=[0.3, 0.35, 0.2, 0.1, 0.04, 0.01])
+        num_variants = np.random.choice([0, 1, 2, 3, 4, 5, 6], p=[0.25, 0.35, 0.20, 0.12, 0.05, 0.02, 0.01])
         
         for v in range(num_variants):
-            gene = np.random.choice(HEARING_LOSS_GENES)
-            chromosome = np.random.choice(CHROMOSOMES)
-            position = np.random.randint(1000000, 50000000)
+            gene = np.random.choice(gene_list)
+            gene_info = HEARING_LOSS_GENES[gene]
+            chromosome = gene_info['chr']
+            position = np.random.randint(10000000, 150000000)
             ref = np.random.choice(['A', 'C', 'G', 'T'])
             alt = np.random.choice([a for a in ['A', 'C', 'G', 'T'] if a != ref])
             
             variant_id = f"{chromosome}:{position}:{ref}>{alt}"
-            variant_type = np.random.choice(VARIANT_TYPES, p=[0.8, 0.15, 0.05])
-            zygosity = np.random.choice(ZYGOSITY, p=[0.1, 0.8, 0.1])
+            variant_type = np.random.choice(VARIANT_TYPES, p=[0.75, 0.20, 0.05])
             
-            # Pathogenicity: GJB2 and SLC26A4 more likely pathogenic
-            if gene in ['GJB2', 'SLC26A4']:
-                pathogenicity = np.random.choice(PATHOGENICITY, p=[0.3, 0.25, 0.15, 0.15, 0.15])
+            if gene_info['inheritance'] == 'recessive':
+                zygosity = np.random.choice(ZYGOSITY, p=[0.15, 0.70, 0.15])
             else:
-                pathogenicity = np.random.choice(PATHOGENICITY, p=[0.1, 0.15, 0.3, 0.25, 0.2])
+                zygosity = np.random.choice(ZYGOSITY, p=[0.05, 0.90, 0.05])
             
-            # Allele frequency: pathogenic variants are rarer
+            base_path_prob = gene_info['weight']
+            if base_path_prob > 0.20:
+                pathogenicity = np.random.choice(PATHOGENICITY, p=[0.30, 0.25, 0.15, 0.15, 0.15])
+            else:
+                pathogenicity = np.random.choice(PATHOGENICITY, p=[0.15, 0.20, 0.25, 0.25, 0.15])
+            
             if pathogenicity in ['pathogenic', 'likely_pathogenic']:
+                allele_freq = np.random.uniform(0.00001, 0.005)
+                cadd_score = np.random.uniform(22, 40)
+                revel_score = np.random.uniform(0.7, 1.0)
+            elif pathogenicity == 'VUS':
                 allele_freq = np.random.uniform(0.0001, 0.01)
+                cadd_score = np.random.uniform(10, 25)
+                revel_score = np.random.uniform(0.3, 0.7)
             else:
                 allele_freq = np.random.uniform(0.001, 0.05)
+                cadd_score = np.random.uniform(0, 18)
+                revel_score = np.random.uniform(0.0, 0.4)
             
-            # CADD score: higher for pathogenic
-            if pathogenicity in ['pathogenic', 'likely_pathogenic']:
-                cadd_score = np.random.uniform(20, 35)
-            else:
-                cadd_score = np.random.uniform(5, 25)
-            
-            impact = np.random.choice(IMPACTS, p=[0.15, 0.35, 0.35, 0.15])
             consequence = np.random.choice(CONSEQUENCES)
+            if consequence in ['frameshift_variant', 'stop_gained', 'splice_site']:
+                impact = 'HIGH'
+            elif consequence == 'missense_variant':
+                impact = 'MODERATE'
+            elif consequence == 'synonymous_variant':
+                impact = 'LOW'
+            else:
+                impact = 'MODIFIER'
             
             records.append({
-                'sample_id': sample_id,
-                'gene': gene,
-                'variant_id': variant_id,
-                'chromosome': chromosome,
-                'position': position,
-                'ref': ref,
-                'alt': alt,
-                'variant_type': variant_type,
-                'zygosity': zygosity,
-                'allele_frequency': allele_freq,
-                'pathogenicity': pathogenicity,
-                'cadd_score': cadd_score,
-                'impact': impact,
-                'consequence': consequence
+                'sample_id': sample_id, 'gene': gene, 'variant_id': variant_id,
+                'chromosome': chromosome, 'position': position, 'ref': ref, 'alt': alt,
+                'variant_type': variant_type, 'zygosity': zygosity,
+                'allele_frequency': round(allele_freq, 8),
+                'pathogenicity': pathogenicity, 'cadd_score': round(cadd_score, 2),
+                'revel_score': round(revel_score, 3), 'impact': impact, 'consequence': consequence,
+                'inheritance_pattern': gene_info['inheritance']
             })
     
     df = pd.DataFrame(records)
@@ -110,226 +123,134 @@ def generate_variants_data(num_samples: int) -> pd.DataFrame:
     return df
 
 
-def generate_clinical_data(num_samples: int) -> pd.DataFrame:
-    """Generate synthetic clinical data"""
-    logger.info(f"Generating clinical data for {num_samples} samples...")
+def generate_genetic_profiles(num_samples: int) -> pd.DataFrame:
+    """Generate genetic profile data"""
+    logger.info(f"Generating genetic profiles for {num_samples} samples...")
     
     records = []
     for i in range(num_samples):
         sample_id = f"SAMPLE_{i:04d}"
-        
-        # Demographics
-        age_months = np.random.randint(0, 37)
-        sex = np.random.choice(['M', 'F'])
-        ethnicity = np.random.choice(ETHNICITIES)
-        
-        # Birth characteristics
-        gestational_age = np.clip(np.random.normal(38.5, 2.5), 24, 42)
-        premature = 1 if gestational_age < 37 else 0
-        birth_weight = int(np.clip(np.random.normal(3200, 600), 500, 5000))
-        
-        # APGAR scores (skewed toward higher values)
-        apgar_1_probs = np.array([0.01, 0.02, 0.03, 0.04, 0.05, 0.08, 0.12, 0.20, 0.25, 0.15, 0.05])
-        apgar_1min = np.random.choice(range(11), p=apgar_1_probs / apgar_1_probs.sum())
-        apgar_5_probs = np.array([0.005, 0.01, 0.015, 0.02, 0.03, 0.05, 0.08, 0.15, 0.30, 0.26, 0.075])
-        apgar_5min = np.random.choice(range(11), p=apgar_5_probs / apgar_5_probs.sum())
-        
-        # NICU and complications
-        nicu_days = np.random.choice([0] * 70 + list(range(1, 121)), size=1)[0]
-        mech_vent_days = min(nicu_days, np.random.randint(0, 61)) if nicu_days > 0 else 0
-        
-        # Hyperbilirubinemia
-        hyperbilirubinemia = np.random.choice([0, 1], p=[0.85, 0.15])
-        bilirubin_max = np.random.uniform(5, 25) if hyperbilirubinemia else np.random.uniform(1, 8)
-        
-        # Ototoxic medications
-        ototoxic_meds = np.random.choice([0, 1], p=[0.90, 0.10])
-        aminoglycoside_days = np.random.randint(0, 31) if ototoxic_meds else 0
-        loop_diuretic_days = np.random.randint(0, 31) if ototoxic_meds else 0
-        
-        # Maternal infections
-        maternal_cmv = np.random.choice([0, 1], p=[0.98, 0.02])
-        maternal_rubella = np.random.choice([0, 1], p=[0.99, 0.01])
-        maternal_toxo = np.random.choice([0, 1], p=[0.99, 0.01])
-        
-        # Family and syndromic features
-        family_history = np.random.choice([0, 1], p=[0.85, 0.15])
-        consanguinity = np.random.choice([0, 1], p=[0.95, 0.05])
-        syndromic = np.random.choice([0, 1], p=[0.90, 0.10])
-        craniofacial = np.random.choice([0, 1], p=[0.92, 0.08])
-        
-        # Screening results
-        oae_result = np.random.choice(OAE_RESULTS, p=[0.85, 0.12, 0.03])
-        aabr_result = np.random.choice(AABR_RESULTS, p=[0.88, 0.10, 0.02])
-        
-        # Determine hearing loss (ground truth based on risk factors)
-        risk_score = 0.0
-        
-        # Strong risk factors
-        if family_history: risk_score += 0.15
-        if premature: risk_score += 0.10
-        if nicu_days > 5: risk_score += 0.12
-        if mech_vent_days > 0: risk_score += 0.08
-        if hyperbilirubinemia and bilirubin_max > 20: risk_score += 0.15
-        if ototoxic_meds and aminoglycoside_days > 7: risk_score += 0.12
-        if maternal_cmv: risk_score += 0.20
-        if syndromic: risk_score += 0.18
-        if craniofacial: risk_score += 0.10
-        if apgar_5min < 6: risk_score += 0.10
-        if oae_result == 'refer': risk_score += 0.25
-        if aabr_result == 'refer': risk_score += 0.30
-        
-        # Add randomness
-        risk_score = np.clip(risk_score + np.random.normal(0, 0.1), 0, 1)
-        
-        # Determine hearing loss (15-20% prevalence)
-        hearing_impairment = 1 if risk_score > 0.35 else 0
-        
-        # Severity based on risk score
-        if hearing_impairment:
-            if risk_score < 0.45:
-                severity = 'mild'
-                abr_threshold = np.random.uniform(25, 40)
-            elif risk_score < 0.60:
-                severity = 'moderate'
-                abr_threshold = np.random.uniform(41, 70)
-            elif risk_score < 0.75:
-                severity = 'severe'
-                abr_threshold = np.random.uniform(71, 90)
-            else:
-                severity = 'profound'
-                abr_threshold = np.random.uniform(91, 100)
-        else:
-            severity = 'normal'
-            abr_threshold = np.random.uniform(10, 25)
+        ethnicity = np.random.choice(ETHNICITIES, p=[0.30, 0.20, 0.20, 0.15, 0.05, 0.10])
+        family_history = np.random.choice([0, 1], p=[0.80, 0.20])
+        consanguinity = np.random.choice([0, 1], p=[0.92, 0.08])
+        syndromic_condition = np.random.choice([0, 1], p=[0.92, 0.08])
+        mtdna_variant = np.random.choice([0, 1], p=[0.95, 0.05])
+        polygenic_score = round(np.clip(np.random.normal(0.5, 0.15), 0, 1), 4)
+        gjb2_carrier = np.random.choice([0, 1], p=[0.97, 0.03])
+        num_affected_relatives = np.random.choice([0, 1, 2, 3], p=[0.75, 0.15, 0.07, 0.03]) if family_history else 0
         
         records.append({
-            'sample_id': sample_id,
-            'age_months': age_months,
-            'sex': sex,
-            'ethnicity': ethnicity,
-            'birth_weight_g': birth_weight,
-            'gestational_age_weeks': round(gestational_age, 1),
-            'premature': premature,
-            'apgar_1min': apgar_1min,
-            'apgar_5min': apgar_5min,
-            'nicu_days': nicu_days,
-            'mechanical_ventilation_days': mech_vent_days,
-            'hyperbilirubinemia': hyperbilirubinemia,
-            'bilirubin_max_mg_dl': round(bilirubin_max, 2),
-            'ototoxic_medications': ototoxic_meds,
-            'aminoglycoside_days': aminoglycoside_days,
-            'loop_diuretic_days': loop_diuretic_days,
-            'maternal_cmv_infection': maternal_cmv,
-            'maternal_rubella': maternal_rubella,
-            'maternal_toxoplasmosis': maternal_toxo,
-            'family_history_hearing_loss': family_history,
-            'consanguinity': consanguinity,
-            'syndromic_features': syndromic,
-            'craniofacial_anomalies': craniofacial,
-            'oae_result': oae_result,
-            'aabr_result': aabr_result,
-            'diagnostic_abr_threshold_db': round(abr_threshold, 1),
-            'hearing_loss_severity': severity,
-            'hearing_impairment': hearing_impairment
+            'sample_id': sample_id, 'ethnicity': ethnicity,
+            'family_history_hearing_loss': family_history, 'consanguinity': consanguinity,
+            'syndromic_genetic_condition': syndromic_condition,
+            'mtdna_variant_detected': mtdna_variant, 'polygenic_risk_score': polygenic_score,
+            'gjb2_carrier': gjb2_carrier, 'num_affected_relatives': num_affected_relatives
         })
     
-    df = pd.DataFrame(records)
-    logger.info(f"Generated {len(df)} clinical records")
-    logger.info(f"Hearing impairment prevalence: {df['hearing_impairment'].mean():.2%}")
-    return df
+    return pd.DataFrame(records)
 
 
-def create_features_dataset(variants_df: pd.DataFrame, clinical_df: pd.DataFrame) -> pd.DataFrame:
-    """Merge variants and clinical data into features dataset"""
-    logger.info("Creating merged features dataset...")
+def create_features_dataset(variants_df: pd.DataFrame, profiles_df: pd.DataFrame) -> pd.DataFrame:
+    """Create genetic-only features dataset"""
+    logger.info("Creating genetic features dataset...")
     
-    # Aggregate variant features per sample
     variant_features = []
-    
-    for sample_id in clinical_df['sample_id']:
-        sample_variants = variants_df[variants_df['sample_id'] == sample_id]
+    for sample_id in profiles_df['sample_id']:
+        sv = variants_df[variants_df['sample_id'] == sample_id]
         
         features = {
             'sample_id': sample_id,
-            'pathogenic_variant_count': len(sample_variants[
-                sample_variants['pathogenicity'].isin(['pathogenic', 'likely_pathogenic'])
-            ]),
-            'has_gjb2_variant': int('GJB2' in sample_variants['gene'].values),
-            'has_slc26a4_variant': int('SLC26A4' in sample_variants['gene'].values),
-            'has_otof_variant': int('OTOF' in sample_variants['gene'].values),
-            'max_cadd_score': sample_variants['cadd_score'].max() if len(sample_variants) > 0 else 0.0,
-            'homozygous_variant_count': len(sample_variants[sample_variants['zygosity'] == 'homozygous']),
-            'compound_het_count': len(sample_variants[sample_variants['zygosity'] == 'compound_heterozygous']),
-            'high_impact_variant_count': len(sample_variants[sample_variants['impact'] == 'HIGH'])
+            'total_variant_count': len(sv),
+            'pathogenic_variant_count': len(sv[sv['pathogenicity'] == 'pathogenic']),
+            'likely_pathogenic_count': len(sv[sv['pathogenicity'] == 'likely_pathogenic']),
+            'vus_count': len(sv[sv['pathogenicity'] == 'VUS']),
+            'benign_variant_count': len(sv[sv['pathogenicity'].isin(['benign', 'likely_benign'])]),
+            'has_gjb2_variant': int('GJB2' in sv['gene'].values),
+            'has_slc26a4_variant': int('SLC26A4' in sv['gene'].values),
+            'has_otof_variant': int('OTOF' in sv['gene'].values),
+            'has_myo7a_variant': int('MYO7A' in sv['gene'].values),
+            'has_cdh23_variant': int('CDH23' in sv['gene'].values),
+            'has_tmc1_variant': int('TMC1' in sv['gene'].values),
+            'homozygous_variant_count': len(sv[sv['zygosity'] == 'homozygous']),
+            'compound_het_count': len(sv[sv['zygosity'] == 'compound_heterozygous']),
+            'high_impact_count': len(sv[sv['impact'] == 'HIGH']),
+            'moderate_impact_count': len(sv[sv['impact'] == 'MODERATE']),
+            'max_cadd_score': sv['cadd_score'].max() if len(sv) > 0 else 0.0,
+            'mean_cadd_score': sv['cadd_score'].mean() if len(sv) > 0 else 0.0,
+            'max_revel_score': sv['revel_score'].max() if len(sv) > 0 else 0.0,
+            'rare_variant_count': len(sv[sv['allele_frequency'] < 0.001]),
+            'unique_genes_affected': sv['gene'].nunique() if len(sv) > 0 else 0
         }
         variant_features.append(features)
     
-    variant_features_df = pd.DataFrame(variant_features)
+    variant_df = pd.DataFrame(variant_features)
+    features_df = profiles_df.merge(variant_df, on='sample_id', how='left').fillna(0)
     
-    # Merge with clinical data
-    features_df = clinical_df.merge(variant_features_df, on='sample_id', how='left')
-    features_df = features_df.fillna(0)
+    # Calculate genetic risk
+    risk = pd.Series(0.0, index=features_df.index)
+    risk += features_df['pathogenic_variant_count'] * 0.25
+    risk += features_df['likely_pathogenic_count'] * 0.15
+    risk += features_df['homozygous_variant_count'] * 0.20
+    risk += features_df['compound_het_count'] * 0.18
+    risk += features_df['high_impact_count'] * 0.12
+    risk += features_df['has_gjb2_variant'] * 0.15
+    risk += features_df['has_slc26a4_variant'] * 0.10
+    risk += features_df['has_myo7a_variant'] * 0.12
+    risk += features_df['has_cdh23_variant'] * 0.12
+    risk += (features_df['max_cadd_score'] / 40) * 0.10
+    risk += features_df['max_revel_score'] * 0.08
+    risk += features_df['family_history_hearing_loss'] * 0.15
+    risk += features_df['consanguinity'] * 0.12
+    risk += features_df['syndromic_genetic_condition'] * 0.20
+    risk += features_df['mtdna_variant_detected'] * 0.15
+    risk += features_df['num_affected_relatives'] * 0.05
+    risk += np.random.normal(0, 0.05, len(features_df))
     
-    logger.info(f"Created features dataset with {len(features_df)} samples and {len(features_df.columns)} features")
+    features_df['genetic_risk_score'] = np.clip(risk, 0, 1).round(4)
+    features_df['hearing_impairment'] = (features_df['genetic_risk_score'] > 0.40).astype(int)
+    features_df['hearing_loss_severity'] = features_df['genetic_risk_score'].apply(
+        lambda x: 'normal' if x < 0.40 else 'mild' if x < 0.50 else 'moderate' if x < 0.65 else 'severe' if x < 0.80 else 'profound'
+    )
+    
+    logger.info(f"Created {len(features_df)} samples, {len(features_df.columns)} features")
+    logger.info(f"Hearing impairment rate: {features_df['hearing_impairment'].mean():.2%}")
     return features_df
 
 
 def main():
-    """Main execution function"""
     logger.info("="*60)
-    logger.info("Starting synthetic data generation")
-    logger.info(f"Seed: {SEED}, Samples: {NUM_SAMPLES}")
+    logger.info("GENETIC-ONLY Synthetic Data Generation")
     logger.info("="*60)
     
     try:
-        # Generate data
         variants_df = generate_variants_data(NUM_SAMPLES)
-        clinical_df = generate_clinical_data(NUM_SAMPLES)
-        features_df = create_features_dataset(variants_df, clinical_df)
+        profiles_df = generate_genetic_profiles(NUM_SAMPLES)
+        features_df = create_features_dataset(variants_df, profiles_df)
         
-        # Save to CSV files
-        variants_path = DATA_DIR / "variants.csv"
-        clinical_path = DATA_DIR / "clinical.csv"
-        features_path = DATA_DIR / "features.csv"
+        variants_df.to_csv(DATA_DIR / "variants.csv", index=False)
+        profiles_df.to_csv(DATA_DIR / "genetic_profiles.csv", index=False)
+        features_df.to_csv(DATA_DIR / "features.csv", index=False)
         
-        variants_df.to_csv(variants_path, index=False)
-        clinical_df.to_csv(clinical_path, index=False)
-        features_df.to_csv(features_path, index=False)
+        # Remove old clinical.csv
+        old_clinical = DATA_DIR / "clinical.csv"
+        if old_clinical.exists():
+            old_clinical.unlink()
         
-        logger.info(f"✓ Saved variants to {variants_path}")
-        logger.info(f"✓ Saved clinical data to {clinical_path}")
-        logger.info(f"✓ Saved features to {features_path}")
-        
-        # Save summary statistics
         summary = {
-            'num_samples': NUM_SAMPLES,
-            'num_variants': len(variants_df),
+            'num_samples': NUM_SAMPLES, 'num_variants': len(variants_df),
             'hearing_impairment_rate': float(features_df['hearing_impairment'].mean()),
-            'seed': SEED,
-            'severity_distribution': features_df['hearing_loss_severity'].value_counts().to_dict()
+            'seed': SEED, 'data_type': 'genetic_only',
+            'severity_distribution': features_df['hearing_loss_severity'].value_counts().to_dict(),
+            'features': list(features_df.columns)
         }
-        
-        summary_path = DATA_DIR / "summary.json"
-        with open(summary_path, 'w') as f:
+        with open(DATA_DIR / "summary.json", 'w') as f:
             json.dump(summary, f, indent=2)
-        logger.info(f"✓ Saved summary to {summary_path}")
         
-        # Create verification marker
-        marker_path = DATA_DIR / ".generated_ok"
-        marker_path.touch()
-        logger.info(f"✓ Created verification marker {marker_path}")
-        
-        logger.info("="*60)
-        logger.info("✓ Synthetic data generation completed successfully!")
-        logger.info("="*60)
-        
+        logger.info("✓ Genetic-only data generation complete!")
         return 0
-        
     except Exception as e:
-        logger.error(f"✗ Error during data generation: {e}", exc_info=True)
+        logger.error(f"Error: {e}", exc_info=True)
         return 1
-
 
 if __name__ == "__main__":
     sys.exit(main())

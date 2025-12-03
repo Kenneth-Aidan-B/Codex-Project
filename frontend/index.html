@@ -3,59 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hearing Deficiency Risk Predictor</title>
+    <title>Genetic Hearing Risk Predictor</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a5f7a 0%, #086972 50%, #01a9b4 100%);
             min-height: 100vh;
             padding: 20px;
         }
-
         .container {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
             background: white;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
             overflow: hidden;
         }
-
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a5f7a 0%, #086972 100%);
             color: white;
             padding: 30px;
             text-align: center;
         }
-
-        .header h1 {
-            font-size: 2em;
-            margin-bottom: 10px;
+        .header h1 { font-size: 2em; margin-bottom: 10px; }
+        .header p { opacity: 0.9; font-size: 1.1em; }
+        .dna-icon { font-size: 2.5em; margin-bottom: 10px; }
+        .content { padding: 30px; }
+        .warning {
+            background: linear-gradient(135deg, #fff8e1, #ffecb3);
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 25px;
+            color: #6d4c00;
         }
-
-        .header p {
-            opacity: 0.9;
-            font-size: 1.1em;
-        }
-
-        .content {
-            padding: 30px;
-        }
-
         .tabs {
             display: flex;
             border-bottom: 2px solid #e0e0e0;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
-
         .tab {
-            padding: 15px 30px;
+            padding: 12px 25px;
             cursor: pointer;
             border: none;
             background: none;
@@ -64,42 +53,32 @@
             color: #666;
             transition: all 0.3s;
         }
-
-        .tab.active {
-            color: #667eea;
-            border-bottom: 3px solid #667eea;
+        .tab.active { color: #086972; border-bottom: 3px solid #086972; }
+        .tab:hover { color: #086972; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .section-title {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #1a5f7a;
+            margin: 20px 0 15px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #01a9b4;
         }
-
-        .tab:hover {
-            color: #667eea;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
         .form-row {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
         }
-
+        .form-group { margin-bottom: 10px; }
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: 600;
             color: #333;
+            font-size: 0.9em;
         }
-
         input, select {
             width: 100%;
             padding: 10px;
@@ -108,12 +87,7 @@
             font-size: 1em;
             transition: border-color 0.3s;
         }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
+        input:focus, select:focus { outline: none; border-color: #086972; }
         .btn {
             padding: 12px 30px;
             font-size: 1em;
@@ -123,439 +97,470 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a5f7a 0%, #086972 100%);
             color: white;
         }
-
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 20px rgba(8, 105, 114, 0.4);
         }
-
-        .btn-secondary {
-            background: #f0f0f0;
-            color: #333;
-        }
-
         .result-card {
-            background: #f8f9fa;
-            border-radius: 10px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 12px;
             padding: 25px;
-            margin-top: 20px;
-            border-left: 5px solid #667eea;
+            margin-top: 25px;
+            border-left: 5px solid #086972;
         }
-
-        .result-header {
-            font-size: 1.3em;
-            font-weight: 700;
-            margin-bottom: 15px;
-            color: #333;
-        }
-
+        .result-header { font-size: 1.3em; font-weight: 700; margin-bottom: 15px; color: #1a5f7a; }
         .risk-meter {
-            height: 30px;
+            height: 25px;
             background: #e0e0e0;
-            border-radius: 15px;
+            border-radius: 12px;
             overflow: hidden;
             margin: 15px 0;
         }
-
-        .risk-fill {
-            height: 100%;
-            transition: width 0.5s ease;
-            border-radius: 15px;
-        }
-
-        .risk-low { background: #4caf50; }
-        .risk-medium { background: #ff9800; }
-        .risk-high { background: #f44336; }
-
-        .feature-list {
-            margin-top: 20px;
-        }
-
+        .risk-fill { height: 100%; transition: width 0.5s ease; border-radius: 12px; }
+        .risk-low { background: linear-gradient(90deg, #4caf50, #8bc34a); }
+        .risk-moderate { background: linear-gradient(90deg, #ff9800, #ffc107); }
+        .risk-high { background: linear-gradient(90deg, #ff5722, #f44336); }
+        .risk-veryhigh { background: linear-gradient(90deg, #c62828, #b71c1c); }
+        .feature-list { margin-top: 20px; }
         .feature-item {
             display: flex;
             justify-content: space-between;
-            padding: 10px;
-            margin: 5px 0;
+            align-items: center;
+            padding: 12px;
+            margin: 8px 0;
             background: white;
-            border-radius: 5px;
+            border-radius: 8px;
             border: 1px solid #e0e0e0;
         }
-
         .feature-bar-container {
-            height: 20px;
+            height: 18px;
             background: #e0e0e0;
-            border-radius: 10px;
+            border-radius: 9px;
             flex-grow: 1;
             margin: 0 15px;
             overflow: hidden;
         }
-
         .feature-bar {
             height: 100%;
-            background: #667eea;
-            border-radius: 10px;
+            background: linear-gradient(90deg, #086972, #01a9b4);
+            border-radius: 9px;
             transition: width 0.5s ease;
         }
-
-        .warning {
-            background: #fff3cd;
-            border: 1px solid #ffc107;
-            border-radius: 5px;
-            padding: 15px;
-            margin: 20px 0;
-            color: #856404;
-        }
-
-        .file-upload {
-            border: 2px dashed #667eea;
-            border-radius: 10px;
-            padding: 30px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .file-upload:hover {
-            background: #f8f9fa;
-            border-color: #764ba2;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 20px;
-        }
-
+        .loading { display: none; text-align: center; padding: 30px; }
         .spinner {
             border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
+            border-top: 4px solid #086972;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             animation: spin 1s linear infinite;
-            margin: 0 auto;
+            margin: 0 auto 15px;
         }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .gene-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #e3f2fd;
+            color: #1565c0;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin: 3px;
         }
+        .info-card {
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .info-card h4 { color: #1a5f7a; margin-bottom: 10px; }
+        .info-card ul { padding-left: 20px; }
+        .info-card li { margin: 8px 0; color: #555; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🔊 Hearing Deficiency Risk Predictor</h1>
-            <p>AI-Powered Risk Assessment Using Genomic & Clinical Data</p>
+            <div class="dna-icon">🧬</div>
+            <h1>Genetic Hearing Risk Predictor</h1>
+            <p>AI-Powered Risk Assessment Using Genomic Variant Analysis</p>
         </div>
 
         <div class="content">
             <div class="warning">
-                <strong>⚠️ Disclaimer:</strong> This is a research prototype using synthetic data. 
-                NOT for clinical use. Consult healthcare professionals for medical advice.
+                <strong>⚠️ Research Prototype:</strong> This tool analyzes genetic variants only.
+                It uses synthetic data for demonstration purposes and is NOT for clinical diagnosis.
+                Consult genetic counselors and healthcare professionals for medical decisions.
             </div>
 
             <div class="tabs">
-                <button class="tab active" onclick="showTab('single')">Single Prediction</button>
-                <button class="tab" onclick="showTab('batch')">Batch Prediction</button>
+                <button class="tab active" onclick="showTab('predict')">Genetic Analysis</button>
+                <button class="tab" onclick="showTab('genes')">Hearing Genes</button>
                 <button class="tab" onclick="showTab('about')">About</button>
             </div>
 
-            <!-- Single Prediction Tab -->
-            <div id="single" class="tab-content active">
-                <h2>Enter Patient Information</h2>
-                <form id="predictionForm">
+            <!-- Genetic Prediction Tab -->
+            <div id="predict" class="tab-content active">
+                <form id="geneticForm">
+                    <div class="section-title">🧬 Genetic Profile</div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Age (months)</label>
-                            <input type="number" name="age_months" value="6" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Sex</label>
-                            <select name="sex" required>
-                                <option value="M">Male</option>
-                                <option value="F">Female</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
                             <label>Ethnicity</label>
-                            <select name="ethnicity" required>
+                            <select name="ethnicity">
                                 <option value="Caucasian">Caucasian</option>
                                 <option value="Hispanic">Hispanic</option>
                                 <option value="Asian">Asian</option>
                                 <option value="African">African</option>
+                                <option value="Middle_Eastern">Middle Eastern</option>
                                 <option value="Mixed">Mixed</option>
                             </select>
                         </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Birth Weight (g)</label>
-                            <input type="number" name="birth_weight_g" value="3200" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Gestational Age (weeks)</label>
-                            <input type="number" step="0.1" name="gestational_age_weeks" value="38.5" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Premature Birth</label>
-                            <select name="premature" required>
-                                <option value="0">No</option>
-                                <option value="1">Yes</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>APGAR 1 min</label>
-                            <input type="number" name="apgar_1min" value="8" min="0" max="10" required>
-                        </div>
-                        <div class="form-group">
-                            <label>APGAR 5 min</label>
-                            <input type="number" name="apgar_5min" value="9" min="0" max="10" required>
-                        </div>
-                        <div class="form-group">
-                            <label>NICU Days</label>
-                            <input type="number" name="nicu_days" value="0" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Mechanical Ventilation (days)</label>
-                            <input type="number" name="mechanical_ventilation_days" value="0" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Hyperbilirubinemia</label>
-                            <select name="hyperbilirubinemia" required>
-                                <option value="0">No</option>
-                                <option value="1">Yes</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Max Bilirubin (mg/dL)</label>
-                            <input type="number" step="0.1" name="bilirubin_max_mg_dl" value="5.0" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Ototoxic Medications</label>
-                            <select name="ototoxic_medications" required>
-                                <option value="0">No</option>
-                                <option value="1">Yes</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Aminoglycoside Days</label>
-                            <input type="number" name="aminoglycoside_days" value="0" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Loop Diuretic Days</label>
-                            <input type="number" name="loop_diuretic_days" value="0" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Maternal CMV Infection</label>
-                            <select name="maternal_cmv_infection" required>
-                                <option value="0">No</option>
-                                <option value="1">Yes</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Maternal Rubella</label>
-                            <select name="maternal_rubella" required>
-                                <option value="0">No</option>
-                                <option value="1">Yes</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Maternal Toxoplasmosis</label>
-                            <select name="maternal_toxoplasmosis" required>
-                                <option value="0">No</option>
-                                <option value="1">Yes</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
                         <div class="form-group">
                             <label>Family History of Hearing Loss</label>
-                            <select name="family_history_hearing_loss" required>
+                            <select name="family_history_hearing_loss">
                                 <option value="0">No</option>
                                 <option value="1">Yes</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Consanguinity</label>
-                            <select name="consanguinity" required>
-                                <option value="0">No</option>
-                                <option value="1">Yes</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Syndromic Features</label>
-                            <select name="syndromic_features" required>
+                            <label>Parental Consanguinity</label>
+                            <select name="consanguinity">
                                 <option value="0">No</option>
                                 <option value="1">Yes</option>
                             </select>
                         </div>
                     </div>
-
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Craniofacial Anomalies</label>
-                            <select name="craniofacial_anomalies" required>
+                            <label>Syndromic Genetic Condition</label>
+                            <select name="syndromic_genetic_condition">
                                 <option value="0">No</option>
                                 <option value="1">Yes</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>OAE Result</label>
-                            <select name="oae_result" required>
-                                <option value="pass">Pass</option>
-                                <option value="refer">Refer</option>
-                                <option value="not_done">Not Done</option>
+                            <label>mtDNA Variant Detected</label>
+                            <select name="mtdna_variant_detected">
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>AABR Result</label>
-                            <select name="aabr_result" required>
-                                <option value="pass">Pass</option>
-                                <option value="refer">Refer</option>
-                                <option value="not_done">Not Done</option>
+                            <label>GJB2 Carrier Status</label>
+                            <select name="gjb2_carrier">
+                                <option value="0">Non-Carrier</option>
+                                <option value="1">Carrier</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Number of Affected Relatives</label>
+                            <input type="number" name="num_affected_relatives" value="0" min="0" max="10">
+                        </div>
+                        <div class="form-group">
+                            <label>Polygenic Risk Score (0-1)</label>
+                            <input type="number" name="polygenic_risk_score" value="0.5" min="0" max="1" step="0.01">
+                        </div>
+                    </div>
+
+                    <div class="section-title">🔬 Variant Analysis</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Total Variants Detected</label>
+                            <input type="number" name="total_variant_count" value="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Pathogenic Variants</label>
+                            <input type="number" name="pathogenic_variant_count" value="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Likely Pathogenic Variants</label>
+                            <input type="number" name="likely_pathogenic_count" value="0" min="0">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>VUS (Uncertain Significance)</label>
+                            <input type="number" name="vus_count" value="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Benign Variants</label>
+                            <input type="number" name="benign_variant_count" value="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Rare Variants (AF &lt; 0.001)</label>
+                            <input type="number" name="rare_variant_count" value="0" min="0">
+                        </div>
+                    </div>
+
+                    <div class="section-title">🎯 Gene-Specific Variants</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>GJB2 (Connexin 26)</label>
+                            <select name="has_gjb2_variant">
+                                <option value="0">No Variant</option>
+                                <option value="1">Variant Detected</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>SLC26A4 (Pendrin)</label>
+                            <select name="has_slc26a4_variant">
+                                <option value="0">No Variant</option>
+                                <option value="1">Variant Detected</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>OTOF (Otoferlin)</label>
+                            <select name="has_otof_variant">
+                                <option value="0">No Variant</option>
+                                <option value="1">Variant Detected</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>MYO7A (Myosin VIIA)</label>
+                            <select name="has_myo7a_variant">
+                                <option value="0">No Variant</option>
+                                <option value="1">Variant Detected</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>CDH23 (Cadherin 23)</label>
+                            <select name="has_cdh23_variant">
+                                <option value="0">No Variant</option>
+                                <option value="1">Variant Detected</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>TMC1</label>
+                            <select name="has_tmc1_variant">
+                                <option value="0">No Variant</option>
+                                <option value="1">Variant Detected</option>
                             </select>
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Predict Risk</button>
+                    <div class="section-title">📊 Variant Impact & Zygosity</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Homozygous Variants</label>
+                            <input type="number" name="homozygous_variant_count" value="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Compound Heterozygous</label>
+                            <input type="number" name="compound_het_count" value="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>HIGH Impact Variants</label>
+                            <input type="number" name="high_impact_count" value="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>MODERATE Impact Variants</label>
+                            <input type="number" name="moderate_impact_count" value="0" min="0">
+                        </div>
+                    </div>
+
+                    <div class="section-title">📈 Pathogenicity Scores</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Max CADD Score (0-50)</label>
+                            <input type="number" name="max_cadd_score" value="0" min="0" max="50" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label>Mean CADD Score</label>
+                            <input type="number" name="mean_cadd_score" value="0" min="0" max="50" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label>Max REVEL Score (0-1)</label>
+                            <input type="number" name="max_revel_score" value="0" min="0" max="1" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Unique Genes Affected</label>
+                            <input type="number" name="unique_genes_affected" value="0" min="0">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="margin-top: 20px;">
+                        🧬 Analyze Genetic Risk
+                    </button>
                 </form>
 
                 <div class="loading" id="loading">
                     <div class="spinner"></div>
-                    <p>Analyzing data...</p>
+                    <p>Analyzing genetic variants...</p>
                 </div>
 
                 <div id="result"></div>
             </div>
 
-            <!-- Batch Prediction Tab -->
-            <div id="batch" class="tab-content">
-                <h2>Batch Prediction from CSV</h2>
-                <div class="file-upload" onclick="document.getElementById('csvFile').click()">
-                    <p>📁 Click to upload CSV file</p>
-                    <p style="font-size: 0.9em; color: #666; margin-top: 10px;">
-                        CSV should contain all required patient fields
-                    </p>
+            <!-- Genes Info Tab -->
+            <div id="genes" class="tab-content">
+                <h2 style="color: #1a5f7a; margin-bottom: 20px;">Hearing Loss Genes Analyzed</h2>
+                
+                <div class="info-card">
+                    <h4>🧬 GJB2 (Connexin 26)</h4>
+                    <ul>
+                        <li><strong>Inheritance:</strong> Autosomal Recessive</li>
+                        <li><strong>Prevalence:</strong> ~50% of genetic hearing loss cases</li>
+                        <li><strong>Description:</strong> Most common cause of genetic non-syndromic hearing loss. Encodes a gap junction protein essential for potassium recycling in the cochlea.</li>
+                    </ul>
                 </div>
-                <input type="file" id="csvFile" accept=".csv" style="display: none;" onchange="handleFileUpload(event)">
-                <div id="batchResult"></div>
+
+                <div class="info-card">
+                    <h4>🧬 SLC26A4 (Pendrin)</h4>
+                    <ul>
+                        <li><strong>Inheritance:</strong> Autosomal Recessive</li>
+                        <li><strong>Prevalence:</strong> ~10% of genetic cases</li>
+                        <li><strong>Description:</strong> Causes Pendred syndrome and DFNB4. Associated with enlarged vestibular aqueduct (EVA) and thyroid abnormalities.</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h4>🧬 OTOF (Otoferlin)</h4>
+                    <ul>
+                        <li><strong>Inheritance:</strong> Autosomal Recessive</li>
+                        <li><strong>Prevalence:</strong> 2-3% of genetic cases</li>
+                        <li><strong>Description:</strong> Causes auditory neuropathy spectrum disorder (ANSD). Patients may have normal OAE but abnormal ABR.</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h4>🧬 MYO7A (Myosin VIIA)</h4>
+                    <ul>
+                        <li><strong>Inheritance:</strong> Autosomal Recessive/Dominant</li>
+                        <li><strong>Prevalence:</strong> 3-5% of genetic cases</li>
+                        <li><strong>Description:</strong> Causes Usher syndrome type 1B (hearing loss + retinitis pigmentosa), DFNB2, and DFNA11.</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h4>🧬 CDH23 (Cadherin 23)</h4>
+                    <ul>
+                        <li><strong>Inheritance:</strong> Autosomal Recessive</li>
+                        <li><strong>Prevalence:</strong> 2-3% of genetic cases</li>
+                        <li><strong>Description:</strong> Causes Usher syndrome type 1D and DFNB12. Essential for stereocilia organization in hair cells.</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h4>🧬 TMC1 (Transmembrane Channel Like 1)</h4>
+                    <ul>
+                        <li><strong>Inheritance:</strong> Autosomal Recessive/Dominant</li>
+                        <li><strong>Prevalence:</strong> 1-2% of genetic cases</li>
+                        <li><strong>Description:</strong> Causes DFNB7/11 and DFNA36. Component of the mechanotransduction channel in hair cells.</li>
+                    </ul>
+                </div>
             </div>
 
             <!-- About Tab -->
             <div id="about" class="tab-content">
-                <h2>About This Tool</h2>
-                <p style="line-height: 1.8; color: #666;">
-                    This is an AI-powered research prototype for predicting hearing deficiency risk in newborns.
-                    It combines genomic and clinical data using multiple machine learning models including:
+                <h2 style="color: #1a5f7a; margin-bottom: 20px;">About This Tool</h2>
+                <p style="line-height: 1.8; color: #555; margin-bottom: 20px;">
+                    This is a <strong>genetics-only</strong> research prototype for predicting hearing deficiency risk 
+                    based purely on genomic variant analysis. Unlike clinical screening tools, this system focuses 
+                    exclusively on genetic risk factors.
                 </p>
-                <ul style="margin: 20px 0; padding-left: 20px;">
-                    <li>Random Forest</li>
-                    <li>Support Vector Machine (SVM)</li>
-                    <li>XGBoost/Gradient Boosting</li>
-                    <li>Artificial Neural Network (ANN)</li>
-                    <li>Transformer-based classifier</li>
-                </ul>
-                <p style="line-height: 1.8; color: #666;">
-                    The models are explained using SHAP (SHapley Additive exPlanations) to provide interpretable
-                    insights into risk factors. This tool uses synthetic data and is intended for research and
-                    educational purposes only.
-                </p>
-                <h3 style="margin-top: 30px;">Key Features:</h3>
-                <ul style="margin: 20px 0; padding-left: 20px;">
-                    <li>Multi-model ensemble prediction</li>
-                    <li>SHAP-based explainability</li>
-                    <li>Clinical and genomic feature integration</li>
-                    <li>Batch processing support</li>
-                    <li>Risk stratification (Low/Medium/High)</li>
-                </ul>
+
+                <div class="info-card">
+                    <h4>🔬 Genetic Features Analyzed</h4>
+                    <ul>
+                        <li><strong>Variant Counts:</strong> Pathogenic, likely pathogenic, VUS, benign</li>
+                        <li><strong>Gene-Specific:</strong> GJB2, SLC26A4, OTOF, MYO7A, CDH23, TMC1</li>
+                        <li><strong>Zygosity:</strong> Homozygous, compound heterozygous variants</li>
+                        <li><strong>Impact:</strong> HIGH and MODERATE impact variants</li>
+                        <li><strong>Scores:</strong> CADD, REVEL pathogenicity scores</li>
+                        <li><strong>Family History:</strong> Affected relatives, consanguinity</li>
+                    </ul>
+                </div>
+
+                <div class="info-card">
+                    <h4>📊 Risk Categories</h4>
+                    <ul>
+                        <li><strong>Low (&lt;30%):</strong> Minimal genetic risk factors identified</li>
+                        <li><strong>Moderate (30-50%):</strong> Some genetic risk - counseling recommended</li>
+                        <li><strong>High (50-70%):</strong> Significant genetic risk - further testing needed</li>
+                        <li><strong>Very High (&gt;70%):</strong> Multiple pathogenic variants detected</li>
+                    </ul>
+                </div>
+
+                <div class="warning" style="margin-top: 20px;">
+                    <strong>⚠️ Important Limitations:</strong><br>
+                    • Uses synthetic training data<br>
+                    • Not validated for clinical use<br>
+                    • Does not replace genetic testing or counseling<br>
+                    • For research and educational purposes only
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Use same origin (relative URL) - works in all environments without CORS issues
-        const API_URL = '';
+        // Detect environment and set API URL accordingly
+        let API_URL;
+        const hostname = window.location.hostname;
+        
+        if (hostname.includes('.app.github.dev')) {
+            // GitHub Codespaces URL format: name-port.app.github.dev
+            // Replace the port number in the subdomain
+            API_URL = window.location.origin.replace(/-\d+\.app\.github\.dev/, '-8000.app.github.dev');
+        } else if (hostname.includes('github.dev')) {
+            // Alternative Codespaces format
+            API_URL = window.location.origin.replace(/-\d+\./, '-8000.');
+        } else if (hostname === 'localhost' || hostname === '127.0.0.1') {
+            API_URL = 'http://localhost:8000';
+        } else {
+            API_URL = `${window.location.protocol}//${hostname}:8000`;
+        }
+        console.log('Frontend origin:', window.location.origin);
+        console.log('API URL:', API_URL);
 
         function showTab(tabName) {
-            // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(el => {
-                el.classList.remove('active');
-            });
-            document.querySelectorAll('.tab').forEach(el => {
-                el.classList.remove('active');
-            });
-
-            // Show selected tab
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
             document.getElementById(tabName).classList.add('active');
             event.target.classList.add('active');
         }
 
-        document.getElementById('predictionForm').addEventListener('submit', async (e) => {
+        document.getElementById('geneticForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             const formData = new FormData(e.target);
             const data = {};
+            
             formData.forEach((value, key) => {
-                // Convert numeric fields
-                if (['age_months', 'birth_weight_g', 'premature', 'apgar_1min', 'apgar_5min', 
-                     'nicu_days', 'mechanical_ventilation_days', 'hyperbilirubinemia', 
-                     'ototoxic_medications', 'aminoglycoside_days', 'loop_diuretic_days',
-                     'maternal_cmv_infection', 'maternal_rubella', 'maternal_toxoplasmosis',
-                     'family_history_hearing_loss', 'consanguinity', 'syndromic_features',
-                     'craniofacial_anomalies'].includes(key)) {
-                    data[key] = parseInt(value);
-                } else if (['gestational_age_weeks', 'bilirubin_max_mg_dl'].includes(key)) {
+                if (['polygenic_risk_score', 'max_cadd_score', 'mean_cadd_score', 'max_revel_score'].includes(key)) {
                     data[key] = parseFloat(value);
-                } else {
+                } else if (key === 'ethnicity') {
                     data[key] = value;
+                } else {
+                    data[key] = parseInt(value);
                 }
             });
 
-            // Show loading
             document.getElementById('loading').style.display = 'block';
             document.getElementById('result').innerHTML = '';
 
             try {
                 const response = await fetch(`${API_URL}/predict`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
 
-                if (!response.ok) {
-                    throw new Error('Prediction failed');
-                }
-
+                if (!response.ok) throw new Error('Prediction failed');
                 const result = await response.json();
                 displayResult(result);
             } catch (error) {
                 document.getElementById('result').innerHTML = `
                     <div class="result-card" style="border-left-color: #f44336;">
-                        <div class="result-header">Error</div>
-                        <p>Failed to get prediction. Make sure the API server is running.</p>
+                        <div class="result-header">⚠️ Error</div>
+                        <p>Failed to get prediction. Make sure the API server is running on port 8000.</p>
                         <p style="color: #666; margin-top: 10px;">Error: ${error.message}</p>
+                        <p style="margin-top: 10px;"><code>uvicorn backend.app:app --reload --port 8000</code></p>
                     </div>
                 `;
             } finally {
@@ -564,22 +569,25 @@
         });
 
         function displayResult(result) {
-            const riskScore = result.risk_score * 100;
-            const riskClass = riskScore < 30 ? 'risk-low' : riskScore < 70 ? 'risk-medium' : 'risk-high';
-            const riskLabel = riskScore < 30 ? 'Low Risk' : riskScore < 70 ? 'Medium Risk' : 'High Risk';
+            const riskScore = result.genetic_risk_score * 100;
+            let riskClass, riskColor;
+            if (riskScore < 30) { riskClass = 'risk-low'; riskColor = '#4caf50'; }
+            else if (riskScore < 50) { riskClass = 'risk-moderate'; riskColor = '#ff9800'; }
+            else if (riskScore < 70) { riskClass = 'risk-high'; riskColor = '#ff5722'; }
+            else { riskClass = 'risk-veryhigh'; riskColor = '#c62828'; }
 
             let featuresHTML = '';
             if (result.top_features && result.top_features.length > 0) {
-                featuresHTML = '<div class="feature-list"><h3>Top Contributing Features:</h3>';
-                result.top_features.forEach(feature => {
-                    const importance = (feature.importance * 100).toFixed(1);
+                featuresHTML = '<div class="feature-list"><h3 style="color: #1a5f7a; margin-bottom: 15px;">Top Contributing Genetic Factors:</h3>';
+                result.top_features.forEach(f => {
+                    const imp = (f.importance * 100).toFixed(1);
                     featuresHTML += `
                         <div class="feature-item">
-                            <span><strong>${feature.feature}</strong></span>
+                            <span style="min-width: 150px;"><strong>${f.feature}</strong></span>
                             <div class="feature-bar-container">
-                                <div class="feature-bar" style="width: ${importance}%"></div>
+                                <div class="feature-bar" style="width: ${imp}%"></div>
                             </div>
-                            <span>${importance}%</span>
+                            <span style="min-width: 60px; text-align: right;">${imp}%</span>
                         </div>
                     `;
                 });
@@ -588,96 +596,44 @@
 
             document.getElementById('result').innerHTML = `
                 <div class="result-card">
-                    <div class="result-header">Prediction Results</div>
+                    <div class="result-header">🧬 Genetic Risk Analysis Results</div>
                     <div style="margin: 20px 0;">
-                        <p><strong>Sample ID:</strong> ${result.sample_id}</p>
-                        <p><strong>Model Used:</strong> ${result.model_used}</p>
-                        <p><strong>Prediction:</strong> <span style="color: ${riskScore < 30 ? '#4caf50' : riskScore < 70 ? '#ff9800' : '#f44336'}; font-weight: bold;">${result.prediction}</span></p>
+                        <p><strong>Risk Category:</strong> 
+                            <span style="color: ${riskColor}; font-weight: bold; font-size: 1.2em;">
+                                ${result.risk_category}
+                            </span>
+                        </p>
+                        <p><strong>Prediction:</strong> ${result.prediction}</p>
                         <p><strong>Confidence:</strong> ${(result.confidence * 100).toFixed(1)}%</p>
                     </div>
                     <div>
-                        <p><strong>Risk Score: ${riskScore.toFixed(1)}%</strong></p>
+                        <p><strong>Genetic Risk Score: ${riskScore.toFixed(1)}%</strong></p>
                         <div class="risk-meter">
                             <div class="risk-fill ${riskClass}" style="width: ${riskScore}%"></div>
                         </div>
-                        <p style="text-align: center; color: #666; font-size: 0.9em;">
-                            0% (Low Risk) ← → 100% (High Risk)
-                        </p>
+                        <div style="display: flex; justify-content: space-between; color: #666; font-size: 0.85em;">
+                            <span>Low Risk</span>
+                            <span>Moderate</span>
+                            <span>High</span>
+                            <span>Very High</span>
+                        </div>
                     </div>
                     ${featuresHTML}
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: 30px;">
+                        <div class="info-card" style="background: #eef6ff; border-left: 5px solid #1e88e5;">
+                            <h3 style="color: #1e88e5;">🩺 Patient Insight</h3>
+                            <p style="color: #0f1c2c; line-height: 1.6;">${result.patient_explanation || 'Patient-friendly explanation unavailable.'}</p>
+                        </div>
+                        <div class="info-card" style="background: #fff3e0; border-left: 5px solid #ef6c00;">
+                            <h3 style="color: #ef6c00;">🧠 Clinician Insight</h3>
+                            <p style="color: #3b1d02; line-height: 1.6;">${result.clinician_explanation || 'Clinician explanation unavailable.'}</p>
+                        </div>
+                    </div>
+                    <p style="margin-top: 20px; padding: 10px; background: #fff3cd; border-radius: 5px; color: #856404; font-size: 0.9em;">
+                        ⚠️ ${result.disclaimer}
+                    </p>
                 </div>
             `;
-        }
-
-        async function handleFileUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const formData = new FormData();
-            formData.append('file', file);
-
-            document.getElementById('batchResult').innerHTML = '<div class="loading" style="display: block;"><div class="spinner"></div><p>Processing batch...</p></div>';
-
-            try {
-                const response = await fetch(`${API_URL}/predict/batch`, {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (!response.ok) {
-                    throw new Error('Batch prediction failed');
-                }
-
-                const result = await response.json();
-                displayBatchResult(result);
-            } catch (error) {
-                document.getElementById('batchResult').innerHTML = `
-                    <div class="result-card" style="border-left-color: #f44336;">
-                        <div class="result-header">Error</div>
-                        <p>Failed to process batch. ${error.message}</p>
-                    </div>
-                `;
-            }
-        }
-
-        function displayBatchResult(result) {
-            let html = `
-                <div class="result-card">
-                    <div class="result-header">Batch Prediction Results</div>
-                    <p><strong>Total Samples:</strong> ${result.count}</p>
-                    <p><strong>Model Used:</strong> ${result.model_used}</p>
-                    <div style="max-height: 400px; overflow-y: auto; margin-top: 20px;">
-                        <table style="width: 100%; border-collapse: collapse;">
-                            <thead>
-                                <tr style="background: #f0f0f0;">
-                                    <th style="padding: 10px; text-align: left;">Row</th>
-                                    <th style="padding: 10px; text-align: left;">Prediction</th>
-                                    <th style="padding: 10px; text-align: left;">Risk Score</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-            `;
-
-            result.predictions.forEach(pred => {
-                const riskScore = (pred.risk_score * 100).toFixed(1);
-                const color = riskScore < 30 ? '#4caf50' : riskScore < 70 ? '#ff9800' : '#f44336';
-                html += `
-                    <tr style="border-bottom: 1px solid #e0e0e0;">
-                        <td style="padding: 10px;">${pred.row}</td>
-                        <td style="padding: 10px; color: ${color}; font-weight: bold;">${pred.prediction}</td>
-                        <td style="padding: 10px;">${riskScore}%</td>
-                    </tr>
-                `;
-            });
-
-            html += `
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('batchResult').innerHTML = html;
         }
     </script>
 </body>
