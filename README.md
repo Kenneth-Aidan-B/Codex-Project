@@ -6,6 +6,14 @@
 
 This project implements a comprehensive ML automation system for hearing deficiency risk prediction using genomic and clinical data. The system generates synthetic data, trains multiple models (RandomForest, SVM, XGBoost, ANN, Transformer), provides SHAP explainability, and exposes predictions through a FastAPI backend with a simple HTML/JS frontend.
 
+### Genetics-only & AI-powered analysis (latest updates)
+
+- This repository has been updated to a *genetics-only* prediction approach: the model and UI now focus only on genetic features (variant counts, gene-specific variants, zygosity, CADD/REVEL scores, polygenic scores, etc.).
+- Added AI-powered patient and clinician insights using Google Gemini (Gemini 2.0 Flash). The backend reads `GEMINI_API_KEY` from the environment (recommended: set as a Codespaces secret) and returns two tailored explanations for each prediction:
+  - `patient_explanation` — patient-friendly summary with next steps (concise & empathetic)
+  - `clinician_explanation` — structured clinical summary with `What:`, `Why:`, and `How:` for clinical follow-up
+- The README and API contract were updated accordingly. See the `/predict` response for the new fields.
+
 ### Key Features
 
 - ✅ **Synthetic Data Generation** - Reproducible genomic + clinical datasets (seed 42)
@@ -191,6 +199,8 @@ curl http://localhost:8000/health
 ```
 
 ### Single Prediction
+Note: The `/predict` endpoint now focuses on genetic features. The response includes extra fields: `patient_explanation` (short, patient-facing) and `clinician_explanation` (structured What/Why/How).
+
 ```bash
 curl -X POST http://localhost:8000/predict \
   -H "Content-Type: application/json" \
