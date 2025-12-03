@@ -1,0 +1,34 @@
+{
+  "environment": "production",
+  "database": {
+    "url": "postgresql://user:pass@db:5432/hearing_screening",
+    "echo": false,
+    "pool_size": 20,
+    "max_overflow": 10
+  },
+  "api": {
+    "host": "0.0.0.0",
+    "port": 8000,
+    "debug": false,
+    "reload": false,
+    "workers": 4
+  },
+  "pipeline": {
+    "output_dir": "/data/pipeline_output",
+    "temp_dir": "/tmp/pipeline",
+    "keep_intermediate_files": false
+  },
+  "models": {
+    "model_dir": "/models",
+    "use_gpu": true
+  },
+  "security": {
+    "enable_encryption": true,
+    "enable_audit_logging": true,
+    "session_timeout_minutes": 30
+  },
+  "logging": {
+    "level": "INFO",
+    "format": "json"
+  }
+}
